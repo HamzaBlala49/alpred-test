@@ -1,0 +1,9 @@
+.navbar-ul li a{
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+
+.navbar-ul li .active{
+    color: rgb(191, 138, 3) !important;
+    background-color: rgb(128, 128, 128) !important;
+}

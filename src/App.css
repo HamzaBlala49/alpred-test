@@ -1,0 +1,28 @@
+@font-face {
+  font-family: cairo;
+  src: url(./assets/fonts/Cairo-VariableFont_slnt\,wght.ttf);
+}
+
+*{
+  font-family: cairo;
+  direction: rtl !important;
+}
+
+.bg-text{
+  font-size: 70px;
+  font-weight:bolder;
+  background: linear-gradient(to left,rgb(52, 52, 1),rgb(129, 129, 25),rgb(52, 52, 1));
+  background-clip:text;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(2px 2px 2px #222504);
+
+}
+
+.center{
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}

@@ -1,0 +1,78 @@
+.SideNavbar{
+    position: relative;
+    overflow: hidden;
+    /* width: 260px; */
+    width: 100%;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    /* right: 0; */
+    background-color: #EF9523;
+}
+
+
+.bg{
+    z-index: -1;
+    opacity: .9;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.sideBar-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+}
+
+.logo {
+    width: 200px;
+    object-fit: cover;
+    margin: 20px 0;
+    padding-bottom: 10px;
+    padding: 5px;
+    z-index: 10000;
+    border-bottom: solid 1px white;
+}
+
+.links{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    list-style: none;
+    gap: 10px;
+    z-index: 10000;
+    letter-spacing: 2px;
+}
+
+.links li{
+    /* padding: 5px; */
+    /* padding-right: 10px;     */
+    /* border-radius: 3px; */
+    width: 100%;
+}
+.links li a:hover{
+    background-color: rgba(0, 0, 0, 0.506);
+}
+
+.links li a{
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 300;
+    padding: 5px;
+    padding-right: 10px;
+    border-radius: 3px;
+    width: 100%;
+}
+.active{
+    background-color: rgba(0, 0, 0, 0.612);
+
+}
