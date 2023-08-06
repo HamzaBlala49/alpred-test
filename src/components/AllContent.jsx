@@ -47,7 +47,6 @@ import Finance_Edit from '../pages/Finance_Edit';
 import Office_home from '../pages/Office_home';
 import CustomerDetiles from '../pages/CustomerDetiles';
 import Print_1 from '../pages/Print_1';
-import Print_2 from '../pages/print_2';
 import Print__2 from '../pages/Print__2';
 
 
