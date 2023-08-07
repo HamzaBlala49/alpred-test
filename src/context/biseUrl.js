@@ -1,5 +1,5 @@
-export const bisUrl = "https://almtkqsas.pythonanywhere.com"
+export const bisUrl = "http://43.1.1.28:8000"
 
 
 // https://almtkqsas.pythonanywhere.com
-// "http://127.0.0.1:8000/api"
+// "http://43.1.1.28:8000"

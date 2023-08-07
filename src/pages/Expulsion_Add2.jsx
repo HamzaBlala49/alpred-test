@@ -122,7 +122,7 @@ function Expulsion_Add2() {
               <CustomInput
                 label={"رقم الهاتف 1:"}
                 name="recipient_phone_1"
-                type="number"
+                type="text"
 
               />
             </div>
@@ -175,7 +175,7 @@ function Expulsion_Add2() {
           </div>
 
           <div className="col-12 col-lg-6 col-md-6 col-sm-12">
-            <label className="form-label fs-6">المدينة :</label>
+            <label className="form-label fs-6">الى مدينة:</label>
             <select onChange={(e)=> setCityId(+e.target.value)}  value={cityId} className="form-select form-select-sm"
                 style={{fontSize:'14px',width:'300px' }} 
                 id="floatingSelectGrid">
