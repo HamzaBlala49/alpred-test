@@ -145,6 +145,7 @@ function Records() {
   }
 
   let handelChangeSelect2 = (e)=>{
+    setTransformationList([]);
     setSelectValue2(e.target.value)
     if(e.target.value == ""){
       setSelectValue3("");

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faStore,faMoneyBill, faBox} from '@fortawesome/free-solid-svg-icons';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Formik ,Form} from 'formik';
 import { expulsionSchema, financeSchema, officeSchema, storeSchema } from '../schemas';
 import CustomInput from '../components/CustomInput';
@@ -14,6 +14,7 @@ import CustomSelect from '../components/CustomSelect';
 function Expulsion_Add2() {
     const [isSave, setIsSave] = useState(false);
     const {Id} = useParams()
+    const navigate = useNavigate();
     const [office,setOffice] = useState([]);
     const [officeId,setOfficeId] = useState(null);
     const [city,setCity] = useState([]);
@@ -65,27 +66,26 @@ function Expulsion_Add2() {
 
   let handelSubmit = (values,action)=>{
     if(isauth()){
+      setIsSave(true);
       let {content,price,recipient_phone_1,recipient_phone_2,recipient_name} = values;
   
       axios.post(`${bisUrl}/office/expulsions/`,{content,price,recipient_phone_1:`+967${recipient_phone_1}`,recipient_phone_2:`+967${recipient_phone_2}`,recipient_name,type_price,type_currency,precious,customer:customerId,to_office:officeId,to_city:cityId},config).then(()=>{
           action.resetForm();
-          setIsSave(true);
+          setIsSave(false);
+          navigate("/expulsion")
       }).catch((e)=>{
+          setIsSave(false);
           console.log(e)
           alert("حدث خطأ أثناء عملية الأضافة")
       })
   
     }
   
-    setTimeout(() => {
-      setIsSave(false);
-    }, 2000);
-  
   }
   return (
     <div className='p-2 container-fluid'>
 
-    {isSave && <div class="alert alert-success"><b>تم الحفظ بنجاح</b></div>}
+    {/* {isSave && <div class="alert alert-success"><b>تم الحفظ بنجاح</b></div>} */}
     <h6 className='text-dark'><FontAwesomeIcon icon={faBox} /> إضافة طرد </h6>
 
   <Formik 
@@ -99,7 +99,7 @@ function Expulsion_Add2() {
       validationSchema={expulsionSchema}
       onSubmit={(values, action)=>handelSubmit(values,action)}
     >
-      {(props) => (
+      {({isSubmitting}) => (
         <Form>
           <div className='row g-3'>
             <div className='col-12 col-lg-6 col-md-6 col-sm-12'>
@@ -200,7 +200,7 @@ function Expulsion_Add2() {
           </div>
           <Link role='button' to={"/customer"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
        
       )}

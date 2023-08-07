@@ -88,13 +88,15 @@ useEffect(()=>{
 let handelSubmit = (values,action)=>{
   console.log("dsds")
   if(isauth()){
+    setIsSave(true);
     let {content,price,recipient_phone_1,recipient_phone_2,recipient_name} = values;
 
     axios.put(`${bisUrl}/office/expulsions/${Id}/`,{content,price,recipient_phone_1:`+967${recipient_phone_1}`,recipient_phone_2:`+967${recipient_phone_2}`,recipient_name,type_price,type_currency,precious,customer:customerId,to_office:officeId,to_city:cityId},config).then(()=>{
-        action.resetForm();
-        // setIsSave(true);
-       navigate("/expulsion")
+      action.resetForm();
+      setIsSave(false);
+      navigate("/expulsion")
     }).catch((e)=>{
+        setIsSave(false);
         console.log(e)
         alert("حدث خطأ أثناء عملية الأضافة")
     })
@@ -124,7 +126,7 @@ let handelSubmit = (values,action)=>{
       validationSchema={expulsionSchema}
       onSubmit={(values, action)=>handelSubmit(values,action)}
     >
-      {(props) => (
+      {({isSubmitting}) => (
         <Form>
           <div className='row g-3'>
             <div className='col-12 col-lg-6 col-md-6 col-sm-12'>
@@ -147,7 +149,7 @@ let handelSubmit = (values,action)=>{
               <CustomInput
                 label={"رقم الهاتف 1:"}
                 name="recipient_phone_1"
-                type="number"
+                type="text"
 
               />
             </div>
@@ -155,7 +157,7 @@ let handelSubmit = (values,action)=>{
               <CustomInput
                 label={" رقم الهاتف 2:"}
                 name="recipient_phone_2"
-                type="number"
+                type="text"
 
               />
             </div>
@@ -236,7 +238,7 @@ let handelSubmit = (values,action)=>{
           </div>
           <Link role='button' to={"/expulsion"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
        
       )}

@@ -82,20 +82,19 @@ function Finance_Edit() {
 
 let handelSubmit = (values,action)=>{
   if(isauth()){
+    setIsSave(true);
 
     axios.put(`${bisUrl}/office/finamcefunds/${Id}/`,{...values,office:officeId,expulsion:expulsionId},config).then(()=>{
         action.resetForm();
+        setIsSave(false);
         navigate("/finance")
     }).catch((e)=>{
+        setIsSave(false);
         console.log(e)
         alert("حدث خطأ أثناء عملية الأضافة")
     })
 
   }
-
-  setTimeout(() => {
-    setIsSave(false);
-  }, 2000);
 
 }
 
@@ -185,7 +184,7 @@ let handelSubmit = (values,action)=>{
 
           <Link role='button' to={"/finance"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
       )}
     </Formik>

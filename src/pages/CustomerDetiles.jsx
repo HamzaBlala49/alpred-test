@@ -37,7 +37,7 @@ function CustomerDetiles() {
         })
 
         axios.get(`${bisUrl}/office/expulsions/?customer=${Id}`,config).then(res=>{
-            setExpulsions([res.data]);
+            setExpulsions([...res.data]);
             setIsLoad(false)
         }).catch(e=>{
             console.log(e)

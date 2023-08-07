@@ -13,6 +13,7 @@ import { useNavigate, useParams } from 'react-router';
 function Store_Edit() {
   let navigate = useNavigate()
   let {Id} = useParams()
+  const [isSave, setIsSave] = useState(false);
   const [element,setElement]=useState([]);
   const [name,setName]=useState("");
   const [number,setNumber]=useState("");
@@ -56,13 +57,15 @@ useEffect(()=>{
 
 let handelSubmit = (values,action)=>{
   if(isauth()){
+    setIsSave(true)
 
     axios.put(`${bisUrl}/office/stores/${Id}/`,{...values,office:OfficeId},config).then(()=>{
-
+        setIsSave(false)
         action.resetForm();
         navigate("/store")
   
     }).catch((e)=>{
+        setIsSave(false)
         console.error(e)
         alert("حدث خطأ أثناء عملية الأضافة")
     })
@@ -119,7 +122,7 @@ let handelSubmit = (values,action)=>{
 
           <Link role='button' to={"/store"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
       )}
     </Formik>

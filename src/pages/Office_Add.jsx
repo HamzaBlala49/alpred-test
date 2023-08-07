@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faBuilding, faL} from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik ,Form} from 'formik';
 import { officeSchema } from '../schemas';
 import CustomInput from '../components/CustomInput';
@@ -11,6 +11,7 @@ import axios from 'axios';
 
 
 function Office_Add() {
+  const navigate = useNavigate();
   const [isSave, setIsSave] = useState(false);
   const [phoneVal , setPhoneVal] = useState(false);
   const [city,setCity] = useState([]);
@@ -55,17 +56,21 @@ function Office_Add() {
 
   let handelSubmit = (values,action)=>{
     if(isauth()){
+      setIsSave(true);
       setPhoneVal(false);
       let {name,phone} = values;
 
       axios.post(`${bisUrl}/office/office/`,{name,phone:`+967${phone}`,user:sendUsers,city:cityId},config).then(()=>{
 
           action.resetForm();
-          setIsSave(true);
+          setIsSave(false);
+          navigate('/office')
     
       }).catch((e)=>{
+          setIsSave(false);
           if(e.response.status == 400){
             setPhoneVal(true);
+
 
           }else{
 
@@ -77,12 +82,6 @@ function Office_Add() {
 
     }
     
-
-    setTimeout(() => {
-
-      setIsSave(false);
-      
-    }, 2000);
 
   }
 
@@ -102,7 +101,6 @@ function Office_Add() {
   return (
     <div className='p-2 container-fluid'>
 
-    {isSave && <div class="alert alert-success"><b>تم الحفظ بنجاح</b></div>}
     {phoneVal && <div class="alert alert-danger"><b> رقم الهاتف المدحل غير صالح</b></div>}
 
     <h6 className='text-dark'><FontAwesomeIcon icon={faBuilding} /> إضافة مكتب </h6>
@@ -156,7 +154,7 @@ function Office_Add() {
 
           <Link role='button' to={"/office"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
       )}
     </Formik>

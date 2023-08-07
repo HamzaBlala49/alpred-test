@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faUsers} from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik ,Form} from 'formik';
 import { customerSchema} from '../schemas';
 import CustomInput from '../components/CustomInput';
@@ -12,6 +12,7 @@ import axios from 'axios';
 
 function Customer_Add() {
   const [isSave, setIsSave] = useState(false);
+  const navigate = useNavigate();
   const [city,setCity] = useState([]);
   const [place,setPlace] = useState("");
   const [doc_url,setDoc_url] = useState("");
@@ -43,7 +44,6 @@ function Customer_Add() {
 
 
 let handelSubmit = (values,action)=>{
-  console.log("sdsd")
   if(isauth()){
     let {name , phone_1 ,phone_2 ,number_doc} = values;
     let formData =  new FormData();
@@ -54,28 +54,25 @@ let handelSubmit = (values,action)=>{
     formData.append("place",place)
     formData.append("doc_url",doc_url)
     formData.append("type_doc",type_doc)
-
+    setIsSave(true);
     axios.post(`${bisUrl}/office/customers/`,formData,config).then(()=>{
         action.resetForm();
-        setIsSave(true);
+        setIsSave(false)
+        navigate("/customer")
     }).catch((e)=>{
+        setIsSave(false)
         console.log(e)
         alert("حدث خطأ أثناء عملية الأضافة")
     })
 
   }
 
-  setTimeout(() => {
-    setIsSave(false);
-  }, 2000);
 
 }
 
 
   return (
     <div className='p-2 container-fluid'>
-
-    {isSave && <div class="alert alert-success"><b>تم الحفظ بنجاح</b></div>}
     <h6 className='text-dark'><FontAwesomeIcon icon={faUsers} /> إضافة عميل </h6>
 
   <Formik 
@@ -88,7 +85,7 @@ let handelSubmit = (values,action)=>{
       onSubmit = {(values, action)=> handelSubmit(values,action)}
       // validationSchema={customerSchema}
     >
-      {(props) => (
+      {({isSubmitting}) => (
         <Form>
           <div className='row g-1'>
             <div className='col-12 col-lg-6 col-md-6 col-sm-12'>
@@ -161,7 +158,7 @@ let handelSubmit = (values,action)=>{
           </div>
           <Link role='button' to={"/customer"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
        
       )}

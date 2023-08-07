@@ -20,8 +20,8 @@ const financeSchema = yup.object().shape({
 // مشكلة
 const customerSchema = yup.object().shape({
     name:yup.string().min(3,"يجب أن يكون الأدخال أكثر من 3 حروف").max(200,"يجب أن يكون أقل من 25 حرفاً").required("هذا الحقل مطلوب"),
-    // phone_1:yup.string().test("len" ," يجب أن يكون 9 ارقام أو 8 ارقام اذا كان رقم هاتف ادخل مفتاح المحافظة ", val => val.toString().length === 9 || val.toString().length === 8  ).required("هذا الحقل مطلوب"),
-    // phone_2:yup.string().test("len" ," يجب أن يكون 9 ارقام أو 8 ارقام اذا كان رقم هاتف ادخل مفتاح المحافظة ", val => val.toString().length === 9 || val.toString().length === 8  ).required("هذا الحقل مطلوب"),
+    // phone_1:yup.string().test("len" ," يجب أن يكون 9 ارقام أو 8 ارقام اذا كان رقم هاتف ادخل مفتاح المحافظة ", val => val.toString().length == 9 || val.length == 8  ).required("هذا الحقل مطلوب"),
+    // phone_2:yup.string().test("len" ," يجب أن يكون 9 ارقام أو 8 ارقام اذا كان رقم هاتف ادخل مفتاح المحافظة ", val => val.toString().length == 9 || val.length == 8  ).required("هذا الحقل مطلوب"),
     number_doc:yup.number().required("هذا الحقل مطلوب"),
     price:yup.number().positive("السعر يجب أن يكون موجباً").required("هذا الحقل مطلوب"),
 

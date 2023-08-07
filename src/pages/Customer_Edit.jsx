@@ -13,6 +13,7 @@ import axios from 'axios';
 
 function Customer_Edit() {
   let navigate = useNavigate()
+  const [isSave, setIsSave] = useState(false);
   let {Id} = useParams()
   const [element,setElement]=useState([]);
   const  [name,setName] = useState("");
@@ -64,6 +65,7 @@ function Customer_Edit() {
 
 let handelSubmit = (values,action)=>{
   if(isauth()){
+    setIsSave(true);
     let {name , phone_1 ,phone_2 ,number_doc} = values;
     let formData =  new FormData();
     formData.append("name",name)
@@ -80,8 +82,10 @@ let handelSubmit = (values,action)=>{
 
     axios.put(`${bisUrl}/office/customers/${Id}/`,formData,config).then(()=>{
         action.resetForm();
+        setIsSave(false);
         navigate("/customer")
     }).catch((e)=>{
+      setIsSave(false);
         console.log(e)
         alert("حدث خطأ أثناء عملية الأضافة")
     })
@@ -108,10 +112,10 @@ let handelSubmit = (values,action)=>{
         number_doc:number_doc,
       }}
       enableReinitialize="true"
-      validationSchema={customerSchema}
+      // validationSchema={customerSchema}
       onSubmit={(values, action)=>handelSubmit(values,action)}
     >
-      {(props) => (
+      {({isSubmitting}) => (
         <Form>
           <div className='row g-1'>
             <div className='col-12 col-lg-6 col-md-6 col-sm-12'>
@@ -126,7 +130,7 @@ let handelSubmit = (values,action)=>{
               <CustomInput
                 label={"رقم الهاتف 1:"}
                 name="phone_1"
-                type="number"
+                type="text"
                 placeholder="الأسم.."
 
               />
@@ -135,7 +139,7 @@ let handelSubmit = (values,action)=>{
               <CustomInput
                 label={" رقم الهاتف 2:"}
                 name="phone_2"
-                type="number"
+                type="text"
                 placeholder="الأسم.."
 
               />
@@ -144,7 +148,7 @@ let handelSubmit = (values,action)=>{
               <CustomInput
                 label={"رقم الهوية :"}
                 name="number_doc"
-                type="number"
+                type="text"
                 placeholder="الأسم.."
 
               />
@@ -191,7 +195,7 @@ let handelSubmit = (values,action)=>{
           </div>
           <Link role='button' to={"/customer"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
        
       )}

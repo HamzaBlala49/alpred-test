@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faStore,faMoneyBill} from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik ,Form} from 'formik';
 import { financeSchema, officeSchema, storeSchema } from '../schemas';
 import CustomInput from '../components/CustomInput';
@@ -14,6 +14,7 @@ import CustomSelect from '../components/CustomSelect';
 
 function Finance_Add() {
   const [isSave, setIsSave] = useState(false);
+  const navigate = useNavigate();
   const [office,setOffice] = useState([]);
   const [expulsions,setExpulsions] = useState([]);
 
@@ -60,20 +61,19 @@ function Finance_Add() {
 
 let handelSubmit = (values,action)=>{
   if(isauth()){
-
+    setIsSave(true);
+    
     axios.post(`${bisUrl}/office/finamcefunds/`,{...values,office:officeId,expulsion:expulsionId},config).then(()=>{
         action.resetForm();
-        setIsSave(true);
+        setIsSave(false);
+        navigate("/finance")
     }).catch((e)=>{
-        console.log(e)
-        alert("حدث خطأ أثناء عملية الأضافة")
+      setIsSave(false);
+      console.log(e)
+      alert("حدث خطأ أثناء عملية الأضافة")
     })
 
   }
-
-  setTimeout(() => {
-    setIsSave(false);
-  }, 2000);
 
 }
 
@@ -81,7 +81,6 @@ let handelSubmit = (values,action)=>{
   return (
     <div className='p-2 container-fluid'>
 
-    {isSave && <div class="alert alert-success"><b>تم الحفظ بنجاح</b></div>}
     <h6 className='text-dark'><FontAwesomeIcon icon={faMoneyBill} /> إضافة مالية </h6>
 
     <Formik 
@@ -161,7 +160,7 @@ let handelSubmit = (values,action)=>{
 
           <Link role='button' to={"/finance"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={false} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
       )}
     </Formik>

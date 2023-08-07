@@ -14,6 +14,7 @@ function Office_Edit() {
   let navigate = useNavigate()
   let {Id} = useParams()
   const [element,setElement]=useState([]);
+  const [isSave, setIsSave] = useState(false);
   const [phoneVal , setPhoneVal] = useState(false);
   const [name, setName] = useState("");
   const [phone,setPhone] = useState("")
@@ -100,14 +101,17 @@ function Office_Edit() {
 
   let handelSubmit = (values,action)=>{
     if(isauth()){
+      setIsSave(true);
       let {name,phone} = values;
+      console.log(phone)
 
       axios.put(`${bisUrl}/office/office/${Id}/`,{name,phone:`+967${phone}`,user:sendUsers,city:cityId},config).then(()=>{
-
-          action.resetForm();
-          navigate("/office")
+        action.resetForm();
+        setIsSave(false);
+          navigate("/office");
     
       }).catch((e)=>{
+          setIsSave(false);
           console.error(e)
           alert("حدث خطأ أثناء عملية الأضافة")
       })
@@ -185,7 +189,7 @@ function Office_Edit() {
 
           <Link role='button' to={"/office"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
       )}
     </Formik>
