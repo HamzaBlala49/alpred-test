@@ -15,6 +15,8 @@ function Office() {
   let [element,setElement] = useState(null);
   let [searchValue,setSearchValue] = useState("")
   let [selectValue,setSelectValue] = useState("old");
+  let [selectValue2,setSelectValue2] = useState("");
+  let [selectDate,setSelectDate] = useState("");
   const authHeader = useAuthHeader()
   const config = {
     headers: { 'Authorization': authHeader() }
@@ -104,7 +106,6 @@ function Office() {
        
 
         <div className='col-12 col-lg-3 col-md-3 col-sm-12'>
-          
         <input 
           onChange={(e)=>  handelChangeSearchValue(e)} 
           type="text" 

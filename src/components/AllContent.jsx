@@ -37,6 +37,9 @@ import Records from '../pages/Records';
 import Records_Add from '../pages/Records';
 import Records_Edit from '../pages/Records';
 
+// vehicles
+import Home_vehicle from '../pages/home_vehicle';
+
 
 import LogIn from '../pages/LogIn';
 import { RequireAuth, useIsAuthenticated } from 'react-auth-kit';
@@ -48,6 +51,16 @@ import CustomerDetiles from '../pages/CustomerDetiles';
 import Print_1 from '../pages/Print_1';
 import Print__2 from '../pages/Print__2';
 import P404 from '../pages/P404';
+import TypeVehicle from '../pages/TypeVehicle';
+import TypeVehicle_add from '../pages/TypeVehicle_add';
+import TypeVehicle_Edit from '../pages/TypeVehicle_Edit';
+import Drivers from '../pages/Drivers';
+import Drivers_Add from '../pages/Drivers_Add';
+import Drivers_Edit from '../pages/Drivers_Edit';
+import DriverDetiles from '../pages/DriverDetiles';
+import Vehicle from '../pages/Vehicle';
+import Vehicle_Add from '../pages/Vehicle_Add';
+import Vehicle_Edit from '../pages/Vehicle_Edit';
 
 
 function AllContent() {
@@ -179,7 +192,7 @@ function AllContent() {
                             <Trip_Add/>
                         </RequireAuth>
                     }/>
-                    <Route path='/trip/:id'  element={
+                    <Route path='/trip/:Id'  element={
                         <RequireAuth loginPath='/logIn'>
                             <Trip_Edit/>
                         </RequireAuth>
@@ -219,6 +232,74 @@ function AllContent() {
                             <Records_Edit/>
                         </RequireAuth>
                     }/>
+
+                    {/* vehicle */}
+                    <Route path='/transportation_home'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Home_vehicle/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/transportation_home/typeVehicle'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <TypeVehicle/>
+                        </RequireAuth>
+                    }/>
+                    <Route path='/transportation_home/typeVehicle/add'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <TypeVehicle_add/>
+                        </RequireAuth>
+                    }/>
+                    <Route path='/transportation_home/typeVehicle/:Id'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <TypeVehicle_Edit/>
+                        </RequireAuth>
+                    }/>
+
+                    {/* drivers */}
+                    <Route path='/transportation_home/drivers'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Drivers/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/transportation_home/drivers/add'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Drivers_Add/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/transportation_home/drivers/:Id'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Drivers_Edit/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/transportation_home/drivers/driverDetiles/:Id'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <DriverDetiles/>
+                        </RequireAuth>
+                    }/>
+
+                    {/* Vehicle */}
+                    <Route path='/transportation_home/vehicle'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Vehicle/>
+                        </RequireAuth>
+                    }/>
+                    <Route path='/transportation_home/vehicle/add'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Vehicle_Add/>
+                        </RequireAuth>
+                    }/>
+                    <Route path='/transportation_home/vehicle/:Id'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Vehicle_Edit/>
+                        </RequireAuth>
+                    }/>
+
+
+
 
                     {/* LogIn */}
                     <Route path='/logIn'  element={<LogIn/>}/>

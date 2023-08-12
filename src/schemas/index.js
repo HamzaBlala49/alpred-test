@@ -38,6 +38,26 @@ const expulsionSchema = yup.object().shape({
 })
 
 
+const tripSchema = yup.object().shape({
+    name:yup.string().min(3,"يجب أن يكون الأدخال أكثر من 3 حروف").required("هذا الحقل مطلوب"),
+})
+
+const typeVehicleSchema = yup.object().shape({
+    name:yup.string().required("هذا الحقل مطلوب"),
+})
+
+const driverSchema = yup.object().shape({
+    name:yup.string().required("هذا الحقل مطلوب"),
+    ind:yup.string().required("هذا الحقل مطلوب"),
+})
+
+const vehicleSchema = yup.object().shape({
+    name:yup.string().required("هذا الحقل مطلوب"),
+    color:yup.string().required("هذا الحقل مطلوب"),
+    car_number:yup.string().required("هذا الحقل مطلوب"),
+})
+
+
 
 
 
@@ -53,5 +73,9 @@ export {
     financeSchema,
     loginSchema,
     customerSchema,
-    expulsionSchema
+    expulsionSchema,
+    tripSchema,
+    typeVehicleSchema,
+    driverSchema,
+    vehicleSchema
 }

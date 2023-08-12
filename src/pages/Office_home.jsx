@@ -26,7 +26,6 @@ function Office_home() {
         }
     },[]) 
 
-    console.log(data)
   return (
     <div className='row g-1'>
       <div className="row g-2">

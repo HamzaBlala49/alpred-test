@@ -67,6 +67,7 @@ function Office_Add() {
           navigate('/office')
     
       }).catch((e)=>{
+        console.log(e);
           setIsSave(false);
           if(e.response.status == 400){
             setPhoneVal(true);
