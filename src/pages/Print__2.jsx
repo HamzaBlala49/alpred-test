@@ -102,7 +102,7 @@ function Print__2() {
         <div className='col-12 col-lg-1 col-md-3 col-sm-12'>
             <Link to={'/records'} className="btn btn-outline-dark btn-sm w-100" style={{fontSize:'14px'}} role="button">رجوع</Link>
         </div>
-        <div className="col-lg-2 col-md-2 col-sm-12">
+        <div className="col-lg-2  col-md-2 col-sm-12">
             <button 
                 onClick={(e)=>handelSearch()}
                 className="btn w-100 btn-sm btn-dark"
@@ -182,7 +182,7 @@ function Print__2() {
                         onClick={()=> handelReportBtn1()}
                     > طباعة السند <FontAwesomeIcon icon={faPrint} /> </button>
 
-                    <div className="row" ref={componentRef1}>
+                    <div className="row"  ref={componentRef1}>
                         <div className="text-center"><p style={{fontSize:"20px",fontWeight:"bold",textDecoration:"underline"}}>أستلام مركبة</p></div>
                         <div className="col-5">
                             <div className='mb-2'>
@@ -201,10 +201,10 @@ function Print__2() {
 
                         <div className="col-5">
                         <div className='mt-2 p-2' style={{border:"solid 1px black",borderRadius:"15px"}}>
-                            <p className=' m-0' style={{fontSize:"14px"}}><b> تاريخ السند :</b> {`${date.getDay()}/${date.getMonth() + 1}/${date.getFullYear()}`} </p>
+                            <p className=' m-0' style={{fontSize:"14px"}}><b> تاريخ السند :</b> {`${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`} </p>
                             <p className=' m-0' style={{fontSize:"14px"}}><b> رقم الرحلة :</b> {data[0]?.trip} </p>
                             <p className=' m-0' style={{fontSize:"14px"}}><b> الحالة :</b> {data[0]?.name_expulsion_status} </p>
-                            <p className=' m-0' style={{fontSize:"14px"}}><b> أسم السائق :</b> {data[0]?.name_name_drive} </p>
+                            <p className=' m-0' style={{fontSize:"14px"}}><b> أسم السائق :</b> {data[0]?.name_drive} </p>
                             
                         </div>
                         </div>
@@ -272,7 +272,7 @@ function Print__2() {
             }
 
 {
-                selectValue == 4 && <div>
+                selectValue == 4 && <div >
                     
                     <button className='btn btn-sm my-3 w-100 btn-warning' 
                         type='button'
@@ -302,7 +302,7 @@ function Print__2() {
                             <p className=' m-0' style={{fontSize:"14px"}}><b> تاريخ السند :</b> {`${date.getDay()}/${date.getMonth() + 1}/${date.getFullYear()}`} </p>
                             <p className=' m-0' style={{fontSize:"14px"}}><b> رقم الرحلة :</b> {data[0]?.trip} </p>
                             <p className=' m-0' style={{fontSize:"14px"}}><b> الحالة :</b> {data[0]?.name_expulsion_status} </p>
-                            <p className=' m-0' style={{fontSize:"14px"}}><b> الحالة :</b> {data[0]?.name_name_drive} </p>
+                            <p className=' m-0' style={{fontSize:"14px"}}><b> أسم السائق :</b> {data[0]?.name_name_drive} </p>
                             
                         </div>
                         </div>

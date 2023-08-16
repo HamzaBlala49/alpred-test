@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faCarSide, faStore} from '@fortawesome/free-solid-svg-icons';
+import {faCarSide, faMap, faStore} from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik ,Form} from 'formik';
-import { officeSchema, storeSchema, typeVehicleSchema } from '../schemas';
+import { officeSchema, provinecSchema, storeSchema, typeVehicleSchema } from '../schemas';
 import CustomInput from '../components/CustomInput';
 import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
 
-function TypeVehicle_add() {
+function Provinces_Add() {
     const navigate = useNavigate();
     const [isSave, setIsSave] = useState(false);
     const authHeader = useAuthHeader()
@@ -24,10 +24,10 @@ function TypeVehicle_add() {
     if(isauth()){
       setIsSave(true)
 
-      axios.post(`${bisUrl}/vehicle/types_vehicle/`,values,config).then(()=>{
+      axios.post(`${bisUrl}/places/provinec/`,values,config).then(()=>{
           setIsSave(false);
           action.resetForm();
-          navigate('/transportation_home/typeVehicle')
+          navigate('/location_home/provinec')
     
       }).catch((e)=>{
           setIsSave(false);
@@ -55,33 +55,39 @@ function TypeVehicle_add() {
     
   
   }
-
   return (
     <div className='p-2 container-fluid'>
 
     {/* {phoneVal && <div class="alert alert-danger"><b> رقم الهاتف المدحل غير صالح</b></div>} */}
 
-    <h6 className='text-dark'><FontAwesomeIcon icon={faCarSide} /> إضافة نوع مركبة </h6>
+    <h6 className='text-dark'><FontAwesomeIcon icon={faMap} /> إضافة محافظة</h6>
 
     <Formik 
       initialValues={{
         name:"",
+        numder:""
       }}
-      validationSchema={typeVehicleSchema}
+      validationSchema={provinecSchema}
       onSubmit={(values, action)=>handelSubmit(values,action)}
     >
       {(props) => (
         <Form>
 
           <CustomInput
-            label={" نوع المركبة :"}
+            label={" الأسم:"}
             name="name"
             type="text"
-            placeholder="نوع..."
+            placeholder="الأسم..."
+          />
+
+        <CustomInput
+            label={" رقم المحافظة:"}
+            name="numder"
+            type="text"
           />
       
 
-          <Link role='button' to={"/transportation_home/typeVehicle"} className="btn  ms-2 btn-sm">رجوع</Link>
+          <Link role='button' to={"/location_home/provinec"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
           <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
@@ -92,4 +98,4 @@ function TypeVehicle_add() {
   )
 }
 
-export default TypeVehicle_add
+export default Provinces_Add

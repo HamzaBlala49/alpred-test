@@ -1,17 +1,19 @@
 import React, {useEffect, useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faCarSide, faStore} from '@fortawesome/free-solid-svg-icons';
+import {faCarSide, faLocation, faLocationDot, faStore} from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik ,Form} from 'formik';
-import { officeSchema, storeSchema, typeVehicleSchema } from '../schemas';
+import { directorateSchema, officeSchema, provinecSchema, storeSchema, typeVehicleSchema } from '../schemas';
 import CustomInput from '../components/CustomInput';
 import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
 
-function TypeVehicle_add() {
-    const navigate = useNavigate();
+function City_Add() {
+  const navigate = useNavigate();
     const [isSave, setIsSave] = useState(false);
+    const [directorate ,setdirectorate] =useState([]);
+    const [directorateId ,setdirectorateId] =useState("");
     const authHeader = useAuthHeader()
     let isauth = useIsAuthenticated()
 
@@ -19,15 +21,34 @@ function TypeVehicle_add() {
         headers: { 'Authorization': authHeader() }
     };
 
+    useEffect(()=>{
+
+        if(isauth()){
+    
+          axios.get(`${bisUrl}/places/directorate/`,config).then(res=>{
+            setdirectorate(res.data);
+          }).catch(e=>{
+            alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
+          })
+    
+        }
+      
+    },[])
+    
+    useEffect(()=>{
+      setdirectorateId(directorate[0]?.id);
+    },[directorate]);
+    
+
 
   let handelSubmit = (values,action)=>{
     if(isauth()){
       setIsSave(true)
 
-      axios.post(`${bisUrl}/vehicle/types_vehicle/`,values,config).then(()=>{
+      axios.post(`${bisUrl}/places/city/`,{...values,"directorate":directorateId},config).then(()=>{
           setIsSave(false);
           action.resetForm();
-          navigate('/transportation_home/typeVehicle')
+          navigate('/location_home/city')
     
       }).catch((e)=>{
           setIsSave(false);
@@ -55,33 +76,43 @@ function TypeVehicle_add() {
     
   
   }
-
   return (
     <div className='p-2 container-fluid'>
 
     {/* {phoneVal && <div class="alert alert-danger"><b> رقم الهاتف المدحل غير صالح</b></div>} */}
 
-    <h6 className='text-dark'><FontAwesomeIcon icon={faCarSide} /> إضافة نوع مركبة </h6>
+    <h6 className='text-dark'><FontAwesomeIcon icon={faLocationDot} /> إضافة مدينة</h6>
 
     <Formik 
       initialValues={{
         name:"",
       }}
-      validationSchema={typeVehicleSchema}
+      validationSchema={directorateSchema}
       onSubmit={(values, action)=>handelSubmit(values,action)}
     >
       {(props) => (
         <Form>
 
           <CustomInput
-            label={" نوع المركبة :"}
+            label={" الأسم:"}
             name="name"
             type="text"
-            placeholder="نوع..."
+            placeholder="الأسم..."
           />
+
+        <div className="mb-3">
+            <label className="form-label fs-6">المحافظة :</label>
+            <select onChange={(e)=> setdirectorateId(+e.target.value)}  value={directorateId} className="form-select form-select-sm"
+                style={{fontSize:'14px',width:'300px' }} 
+                id="floatingSelectGrid">
+                  {directorate.map(el=>{
+                    return <option key={el.id} value={el.id}>{el.name}</option>
+                  })}
+              </select>
+          </div>
       
 
-          <Link role='button' to={"/transportation_home/typeVehicle"} className="btn  ms-2 btn-sm">رجوع</Link>
+          <Link role='button' to={"/location_home/city"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
           <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>
@@ -92,4 +123,4 @@ function TypeVehicle_add() {
   )
 }
 
-export default TypeVehicle_add
+export default City_Add

@@ -94,11 +94,27 @@ let handelSubmit = (values,action)=>{
     axios.put(`${bisUrl}/office/expulsions/${Id}/`,{content,price,recipient_phone_1:`+967${recipient_phone_1}`,recipient_phone_2:`+967${recipient_phone_2}`,recipient_name,type_price,type_currency,precious,customer:customerId,to_office:officeId,to_city:cityId},config).then(()=>{
       action.resetForm();
       setIsSave(false);
-      navigate("/expulsion")
+      // navigate("/customer")
+      history.back()
     }).catch((e)=>{
         setIsSave(false);
         console.log(e)
-        alert("حدث خطأ أثناء عملية الأضافة")
+        if(e.response.status == 400){
+          let messes = '';
+          for (const i in e.response.data) {
+            let listError = e.response.data[i];
+            listError.forEach(el => {
+              messes +=` تحذير : ${el} \n` 
+            })
+            
+          }
+          alert(messes)
+
+
+        }else{
+
+          alert("حدث خطأ أثناء عملية الأضافة")
+        }
     })
 
   }
@@ -236,7 +252,7 @@ let handelSubmit = (values,action)=>{
 
           
           </div>
-          <Link role='button' to={"/expulsion"} className="btn  ms-2 btn-sm">رجوع</Link>
+          <Link role='button' onClick={()=>history.back()} className="btn  ms-2 btn-sm">رجوع</Link>
           |
           <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
         </Form>

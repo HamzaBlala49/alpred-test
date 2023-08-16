@@ -13,7 +13,7 @@ import axios from 'axios';
 function Office_Add() {
   const navigate = useNavigate();
   const [isSave, setIsSave] = useState(false);
-  const [phoneVal , setPhoneVal] = useState(false);
+  // const [phoneVal , setPhoneVal] = useState(false);
   const [city,setCity] = useState([]);
   const [cityId,setCityId] = useState(null);
   const [users,setUsers] = useState([]);
@@ -57,7 +57,7 @@ function Office_Add() {
   let handelSubmit = (values,action)=>{
     if(isauth()){
       setIsSave(true);
-      setPhoneVal(false);
+      // setPhoneVal(false);
       let {name,phone} = values;
 
       axios.post(`${bisUrl}/office/office/`,{name,phone:`+967${phone}`,user:sendUsers,city:cityId},config).then(()=>{
@@ -67,10 +67,20 @@ function Office_Add() {
           navigate('/office')
     
       }).catch((e)=>{
-        console.log(e);
+          console.log(e);
           setIsSave(false);
+          
           if(e.response.status == 400){
-            setPhoneVal(true);
+            // setPhoneVal(true);
+            let messes = '';
+            for (const i in e.response.data) {
+              let listError = e.response.data[i];
+              listError.forEach(el => {
+                messes +=` تحذير : ${el} \n` 
+              })
+              
+            }
+            alert(messes)
 
 
           }else{
@@ -102,7 +112,7 @@ function Office_Add() {
   return (
     <div className='p-2 container-fluid'>
 
-    {phoneVal && <div class="alert alert-danger"><b> رقم الهاتف المدحل غير صالح</b></div>}
+    {/* {phoneVal && <div class="alert alert-danger"><b> رقم الهاتف المدحل غير صالح</b></div>} */}
 
     <h6 className='text-dark'><FontAwesomeIcon icon={faBuilding} /> إضافة مكتب </h6>
 

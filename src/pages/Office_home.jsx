@@ -57,7 +57,7 @@ function Office_home() {
         </div>
 
         }
-        {
+        {/* {
            check_permissions("office.view_expulsion") && <div className='col-12 col-lg-4 col-md-4 col-sm-12'>
           <Link to={'/expulsion'} style={{textDecoration:"none"}} className='text-dark fs-5'>
           <div className='text-light p-3 rounded text-center' style={{backgroundColor:"#212121", display:"flex",flexDirection:"column",justifyContent:"center",alignContent:"center",alignItems:"center"}} >
@@ -69,7 +69,7 @@ function Office_home() {
           </Link>
         </div>
 
-        }
+        } */}
 
         {
 
@@ -118,7 +118,7 @@ function Office_home() {
         
 
         {
-            check_permissions("office.view_finamcefund") && <div className='col-12 col-lg-12 col-md-4 col-sm-12'>
+            check_permissions("office.view_finamcefund") && <div className='col-12 col-lg-4 col-md-4 col-sm-12'>
             <Link to={"/finance"} style={{textDecoration:"none"}} className='text-dark fs-5'>
             <div className='text-light p-3 rounded text-center' style={{backgroundColor:"#212121", display:"flex",flexDirection:"column",justifyContent:"center",alignContent:"center",alignItems:"center"}} >
               <div>

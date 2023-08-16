@@ -89,7 +89,22 @@ function Expulsion_Add() {
       }).catch((e)=>{
           setIsSave(false);
           console.log(e)
-          alert("حدث خطأ أثناء عملية الأضافة")
+          if(e.response.status == 400){
+            let messes = '';
+            for (const i in e.response.data) {
+              let listError = e.response.data[i];
+              listError.forEach(el => {
+                messes +=` تحذير : ${el} \n` 
+              })
+              
+            }
+            alert(messes)
+
+
+          }else{
+
+            alert("حدث خطأ أثناء عملية الأضافة")
+          }
       })
   
     }

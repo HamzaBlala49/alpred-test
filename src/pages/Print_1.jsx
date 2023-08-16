@@ -13,6 +13,8 @@ function Print_1() {
     let {id} = useParams()
     const [element,setElement]=useState([]);
     const componentRef = useRef();
+    const date = new Date();
+
 
     const authHeader = useAuthHeader()
     const config = {
@@ -42,7 +44,7 @@ function Print_1() {
               direction: rtl;
             }
           }`,
-          onAfterPrint: ()=> navigate("/expulsion")
+          onAfterPrint: ()=> history.back()
     })
 
     let handelReportBtn = ()=> handlePrint()
@@ -52,7 +54,7 @@ function Print_1() {
     <div>
         <div className='row my-3'>
         <div className='col-12 col-lg-1 col-md-3 col-sm-12'>
-            <Link to={'/office_home'} className="btn btn-outline-dark btn-sm w-100" style={{fontSize:'14px'}} role="button">رجوع</Link>
+            <Link onClick={()=> history.back()} className="btn btn-outline-dark btn-sm w-100" style={{fontSize:'14px'}} role="button">رجوع</Link>
         </div>
 
         <div className='col-12 col-lg-4 col-md-2 col-sm-12'>
@@ -104,7 +106,7 @@ function Print_1() {
         <div className='col-4' style={{border:"solid 1px black",borderRadius:"10px"}}>
             <div  className='p-2'>
             <p className='' style={{fontSize:"14px"}}><b>رقم السند :</b>{element.id}</p>
-            <p className='' style={{fontSize:"14px"}}><b>التاربخ:</b> {element.create_at?.slice(0,10)} </p>
+            <p className='' style={{fontSize:"14px"}}><b>التاربخ:</b> {`${ date.getDate() }/${date.getMonth() + 1}/${date.getFullYear()}`}  </p>
             <p className='' style={{fontSize:"14px"}}><b>أجرة النقل:</b> {element.price}  </p>
             <p className='' style={{fontSize:"14px"}}><b>نوع العملة :</b>{element.name_type_currency}</p>
             <p className='' style={{fontSize:"14px"}}><b>نوع الدفع :</b>{element.name_type_price}</p>
@@ -165,7 +167,7 @@ function Print_1() {
         <div className='col-4' style={{border:"solid 1px black",borderRadius:"10px"}}>
             <div  className='p-2'>
             <p className='' style={{fontSize:"14px"}}><b>رقم السند :</b>{element.id}</p>
-            <p className='' style={{fontSize:"14px"}}><b>التاربخ:</b> {element.create_at?.slice(0,10)} </p>
+            <p className='' style={{fontSize:"14px"}}><b>التاربخ:</b> {`${ date.getDate() }/${date.getMonth() + 1}/${date.getFullYear()}`}  </p>
             <p className='' style={{fontSize:"14px"}}><b>نوع العملة :</b>{element.name_type_currency}</p>
             <p className='' style={{fontSize:"14px"}}><b>نوع الدفع :</b>{element.name_type_price}</p>
             <p className='' style={{fontSize:"14px"}}><b>الأهمية :</b> {element.precious ? "ثمين" : "غير ثمين"} </p>

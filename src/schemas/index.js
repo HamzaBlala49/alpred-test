@@ -57,6 +57,16 @@ const vehicleSchema = yup.object().shape({
     car_number:yup.string().required("هذا الحقل مطلوب"),
 })
 
+const provinecSchema = yup.object().shape({
+    name:yup.string().required("هذا الحقل مطلوب"),
+    numder:yup.number().positive("الرقم المدخل يجب أن يكون موجب").required("هذا الحقل مطلوب"),
+   
+})
+
+const directorateSchema = yup.object().shape({
+    name:yup.string().required("هذا الحقل مطلوب"),
+})
+
 
 
 
@@ -65,6 +75,7 @@ const loginSchema = yup.object().shape({
     username:yup.string().required("أسم المستخدم مطلوب"),
     password:yup.string().required("كلمة المرور مطلوبة"),
 })
+
 
 
 export {
@@ -77,5 +88,7 @@ export {
     tripSchema,
     typeVehicleSchema,
     driverSchema,
-    vehicleSchema
+    vehicleSchema,
+    provinecSchema,
+    directorateSchema
 }

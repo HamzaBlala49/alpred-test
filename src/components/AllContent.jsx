@@ -61,6 +61,17 @@ import DriverDetiles from '../pages/DriverDetiles';
 import Vehicle from '../pages/Vehicle';
 import Vehicle_Add from '../pages/Vehicle_Add';
 import Vehicle_Edit from '../pages/Vehicle_Edit';
+import Print_3 from '../pages/Print_3';
+import Location_home from '../pages/Location_home';
+import Provinces from '../pages/Provinces';
+import Provinces_Add from '../pages/Provinces_Add';
+import Provinces_Edit from '../pages/Provinces_Edit';
+import Directorate from '../pages/Directorate';
+import Directorate_Add from '../pages/Directorate_Add';
+import Directorate_Edit from '../pages/Directorate_Edit';
+import City from '../pages/City';
+import City_Add from '../pages/City _Add';
+import City_Edit from '../pages/City_Edit';
 
 
 function AllContent() {
@@ -198,6 +209,12 @@ function AllContent() {
                         </RequireAuth>
                     }/>
 
+                    <Route path='/trip/print/:Id'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Print_3/>
+                        </RequireAuth>
+                    }/>
+
                     {/* Store */}
                     <Route path='/store'  element={
                         <RequireAuth loginPath='/logIn'>
@@ -297,6 +314,77 @@ function AllContent() {
                             <Vehicle_Edit/>
                         </RequireAuth>
                     }/>
+
+
+                    {/* location */}
+                    <Route path='/location_home'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Location_home/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/location_home/provinec'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Provinces/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/location_home/provinec/add'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Provinces_Add/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/location_home/provinec/:Id'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Provinces_Edit/>
+                        </RequireAuth>
+                    }/>
+
+
+                    <Route path='/location_home/directorate'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Directorate/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/location_home/directorate/add'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Directorate_Add/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/location_home/directorate/:Id'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <Directorate_Edit/>
+                        </RequireAuth>
+                    }/>
+
+                    
+                    <Route path='/location_home/city'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <City/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/location_home/city/add'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <City_Add/>
+                        </RequireAuth>
+                    }/>
+
+                    <Route path='/location_home/city/:Id'  element={
+                        <RequireAuth loginPath='/logIn'>
+                            <City_Edit/>
+                        </RequireAuth>
+                    }/>
+
+
+
+
+                    
+
+
 
 
 

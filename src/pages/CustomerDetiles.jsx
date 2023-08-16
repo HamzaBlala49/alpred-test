@@ -1,20 +1,23 @@
 import React, { useState ,useEffect} from 'react'
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAdd,faInfoCircle,faUser ,faTrashCan,faClipboard, faPenToSquare,faUsers, faBox} from '@fortawesome/free-solid-svg-icons';
+import { faAdd,faInfoCircle,faUser ,faTrashCan,faClipboard, faPenToSquare,faUsers, faBox, faPrint} from '@fortawesome/free-solid-svg-icons';
 import Loader from '../components/Loader';
 import { bisUrl } from '../context/biseUrl';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Alert from '../components/Alert';
+import Confirm from '../components/Confirm';
+import { check_permissions } from '../context/permissions';
 
 function CustomerDetiles() {
     let navigate = useNavigate()
     let {Id} = useParams()
+  let [element,setElement] = useState(null);
     let [searchValue,setSearchValue] = useState("")
     let [selectValue,setSelectValue] = useState("old");
     let [isLoad, setIsLoad] = useState(false);
-    const [element,setElement]=useState([]);
+    const [data,setData]=useState([]);
     const [expulsions,setExpulsions] = useState([]);
     const authHeader = useAuthHeader();
     let isauth = useIsAuthenticated();
@@ -30,7 +33,7 @@ function CustomerDetiles() {
         if(isauth()){
 
         axios.get(`${bisUrl}/office/customers/${Id}`,config).then(res=>{
-            setElement(res.data);
+            setData(res.data);
         }).catch(e=>{
             console.log(e)
             alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
@@ -61,6 +64,28 @@ let handelNote = (note)=>{
     setNote(note)
     
 }
+let handelElement = (el)=>{
+    setElement(el)
+}
+
+let handelDelete = (el)=>{
+
+    if(isauth()){
+
+      axios.delete(`${bisUrl}/office/expulsions/${el.id}`,config).then(()=>{
+        let _data= expulsions;
+        const index = _data.indexOf(el);
+        _data.splice(index,1);
+        setData([..._data]);
+
+      }).catch(e=>{
+        console.error(e)
+        alert("هناك خطأ حدث أثناء الخذف!!")
+      })
+
+    }
+
+}
 
 
   return (
@@ -84,16 +109,16 @@ let handelNote = (note)=>{
                <div className='row p-3'>
                <div className='body-info col-12' >
 
-                   <p><b>الأسم: </b>{element.name}</p>
-                   <p><b> 1 رقم الهاتف: </b>{element.phone_1}</p>
-                   <p><b>2 رقم الهاتف: </b>{element.phone_2}</p>
-                   <p><b> نوع الهوية : </b>{element.name_type_doc}</p>
-                   <p><b> رقم الهوية : </b>{element.number_doc}</p>
-                   <p><b> المدينة: </b>{element.name_place}</p>
+                   <p><b>الأسم: </b>{data.name}</p>
+                   <p><b> 1 رقم الهاتف: </b>{data.phone_1}</p>
+                   <p><b>2 رقم الهاتف: </b>{data.phone_2}</p>
+                   <p><b> نوع الهوية : </b>{data.name_type_doc}</p>
+                   <p><b> رقم الهوية : </b>{data.number_doc}</p>
+                   <p><b> المدينة: </b>{data.name_place}</p>
                </div>
                <div className='col-12'>
 
-                   {element.doc_url ? <img src={element.doc_url} className='shadow-sm'style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} /> : <img src={""} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} /> }
+                   {data.doc_url ? <img src={data.doc_url} className='shadow-sm'style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} /> : <img src={""} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} /> }
 
                </div>
                </div>
@@ -113,7 +138,7 @@ let handelNote = (note)=>{
                     type="text" 
                     className="form-control  form-control-sm outline-none"
                     style={{fontSize:'14px'}}
-                    placeholder='بحث.. '/>
+                    placeholder='البحث بأسم المستلم.. '/>
                 </div>
 
                 <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
@@ -147,7 +172,10 @@ let handelNote = (note)=>{
                         <th scope="col">أهمية الطرد</th>
                         <th scope="col">تاربخ الأنشاء</th>
                         <th scope="col" className='text-primary'>المحتوى</th>
-                        <th scope="col" className='text-warning'>السجلات</th>
+                        {/* <th scope="col" className='text-warning'>السجلات</th> */}
+                        <th scope="col" className='text-warning'>طباعة</th>
+                        <th scope="col" className='text-success'>تعديل</th>
+                        <th scope="col" className='text-danger'>حذف</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -168,7 +196,17 @@ let handelNote = (note)=>{
                     <td>{el.precious ? "ثمين" : "غير ثمين"}</td>
                     <td>{el.create_at.slice(0,10)}</td>
                     <td> <a role='button'  data-bs-toggle="modal" onClick={()=> handelNote(el.content)} data-bs-target={"#Modal"}><FontAwesomeIcon className='text-primary' icon={faInfoCircle}/></a></td>
-                    <td> <Link  to={`recordDetiles/${el.id}`} role='button'><FontAwesomeIcon className='text-warning' icon={faClipboard} /></Link></td>
+                    {/* <td> <Link  to={`recordDetiles/${el.id}`} role='button'><FontAwesomeIcon className='text-warning' icon={faClipboard} /></Link></td> */}
+                    <td><Link to={`/print_1/${el.id}`} role='button'> <FontAwesomeIcon className='text-warning' icon={faPrint} /></Link></td>
+                    
+                    {
+                      check_permissions("office.change_expulsion")?  <td> <Link  to={`/expulsion/${el.id}`} role='button'><FontAwesomeIcon className='text-success' icon={faPenToSquare} /></Link></td>: <td> <Link  style={{cursor:"not-allowed"}} role='button'><FontAwesomeIcon className='text-secondary' icon={faPenToSquare} /></Link></td>
+                    }
+
+                    {
+
+                      check_permissions("office.delete_expulsion") ? <td> <a role='button'  data-bs-toggle="modal"   onClick={()=> handelElement(el)}  data-bs-target={"#ModalD"}><FontAwesomeIcon className='text-danger'  icon={faTrashCan} /></a></td> : <td> <a role='button'  style={{cursor:"not-allowed"}} ><FontAwesomeIcon className='text-secondary'  icon={faTrashCan} /></a></td>
+                    }
                     
                 </tr>
                 :
@@ -189,6 +227,8 @@ let handelNote = (note)=>{
     <Link role='button' to={"/customer"} className="btn btn-dark  ms-2">رجوع</Link>
 
     {!isLoad &&  <Alert note={note} />}
+    {!isLoad && <Confirm header={"حذف"} massage={"هل تريد حذف الطرد؟"} handelDelete={handelDelete} element={element} color={"danger"} icon={faTrashCan} textBtn={"حذف"}  />}
+
 
     </div>
   )

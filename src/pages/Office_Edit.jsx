@@ -113,7 +113,22 @@ function Office_Edit() {
       }).catch((e)=>{
           setIsSave(false);
           console.error(e)
-          alert("حدث خطأ أثناء عملية الأضافة")
+          if(e.response.status == 400){
+            let messes = '';
+            for (const i in e.response.data) {
+              let listError = e.response.data[i];
+              listError.forEach(el => {
+                messes +=` تحذير : ${el} \n` 
+              })
+              
+            }
+            alert(messes)
+
+
+          }else{
+
+            alert("حدث خطأ أثناء عملية الأضافة")
+          }
       })
     }
   }

@@ -53,16 +53,23 @@ function Store_Add() {
       }).catch((e)=>{
           setIsSave(false);
 
-          // if(e.response.status == 400){
-          //   setPhoneVal(true);
-          // }else{
+          if(e.response.status == 400){
+            let messes = '';
+            for (const i in e.response.data) {
+              let listError = e.response.data[i];
+              listError.forEach(el => {
+                messes +=` تحذير : ${el} \n` 
+              })
+              
+            }
+            alert(messes)
 
-          //   alert("حدث خطأ أثناء عملية الأضافة")
-          // }
+
+          }else{
+
+            alert("حدث خطأ أثناء عملية الأضافة")
+          }
           console.log(e)
-
-          alert("حدث خطأ أثناء عملية الأضافة")
-
       })
     }
     

@@ -1,7 +1,7 @@
 import React, { useState ,useEffect} from 'react'
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAdd,faInfoCircle,faTrashCan, faPenToSquare,faUsers, faClipboard, faL, faPrint} from '@fortawesome/free-solid-svg-icons';
+import { faAdd,faInfoCircle,faTrashCan, faPenToSquare,faUsers, faClipboard, faL, faPrint, faSearch} from '@fortawesome/free-solid-svg-icons';
 import Loader from '../components/Loader';
 import { bisUrl } from '../context/biseUrl';
 import Confirm from '../components/Confirm';
@@ -15,17 +15,25 @@ function Records() {
   let [isLoad, setIsLoad] = useState(false);
   let [element,setElement] = useState(null);
   let [searchValue,setSearchValue] = useState("")
-  let [selectValue,setSelectValue] = useState("old");
-  let [selectValue2,setSelectValue2] = useState("");
-  let [selectValue3,setSelectValue3] = useState("0");
+
+  let [status_1_Id,setStatus_1_Id] = useState("");
+  let [status_2_Id,setStatus_2_Id] = useState("0");
+  
   let [transformationList,setTransformationList] = useState([]);
   let [isTransformation,setIsTransformation] = useState(false)
 
   const [trips,setTrips] = useState([]);
-  let [selectValue4,setSelectValue4] = useState("");
+  let [trip_Id_1,setTrip_Id_1] = useState("");
+  let [trip_Id_2,setTrip_Id_2] = useState("");
   
   const [stores,setStores] = useState([]);
-  let [selectValue5,setSelectValue5] = useState("");
+  let [store_Id_1,setStore_Id_1] = useState("");
+  let [store_Id_2,setStore_Id_2] = useState("");
+
+  const [city ,setCity] = useState([]);
+  const [city_name ,setCity_name] = useState("");
+
+  let [isSearch,setIsSearch] = useState(false);
 
   const authHeader = useAuthHeader()
   const config = {
@@ -38,7 +46,7 @@ function Records() {
 
     if(isauth()){
       axios.get(`${bisUrl}/office/records/`,config).then(res=>{
-        setData(res.data);
+        setData(res.data.reverse());
         setIsLoad(false)
 
       }).catch(e=>{
@@ -47,7 +55,7 @@ function Records() {
       })
 
       axios.get(`${bisUrl}/office/trips/`,config).then(res=>{
-        setTrips(res.data);
+        setTrips(res.data.reverse());
         }).catch(e=>{
             console.error(e)
             alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
@@ -56,62 +64,65 @@ function Records() {
 
         axios.get(`${bisUrl}/office/stores/`,config).then(res=>{
 
-            setStores(res.data);
+            setStores(res.data.reverse());
             
             }).catch(e=>{
                 console.error(e)
                 alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
             })
 
+        axios.get(`${bisUrl}/places/city/`,config).then(res=>{
+
+              setCity(res.data.reverse());
+              
+              }).catch(e=>{
+                  console.error(e)
+                  alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
+          })
+
+
     }
 
-  },[])
+  },[isTransformation])
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    setIsLoad(true)
+  //   setIsLoad(true)
 
-    if(isauth()){
-      axios.get(`${bisUrl}/office/records/`,config).then(res=>{
-        setData(res.data);
-        setIsLoad(false)
+  //   if(isauth()){
+  //     console.log("dddd")
+  //     axios.get(`${bisUrl}/office/records/`,config).then(res=>{
+  //       setData(res.data.reverse());
+  //       setIsLoad(false)
 
-      }).catch(e=>{
-        console.error(e)
-      alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
-      })
+  //     }).catch(e=>{
+  //       console.error(e)
+  //     alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
+  //     })
 
-      axios.get(`${bisUrl}/office/trips/`,config).then(res=>{
-        setTrips(res.data);
-        }).catch(e=>{
-            console.error(e)
-            alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
-        })
+  //     axios.get(`${bisUrl}/office/trips/`,config).then(res=>{
+  //       setTrips(res.data);
+  //       }).catch(e=>{
+  //           console.error(e)
+  //           alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
+  //       })
 
 
-        axios.get(`${bisUrl}/office/stores/`,config).then(res=>{
+  //       axios.get(`${bisUrl}/office/stores/`,config).then(res=>{
 
-            setStores(res.data);
+  //           setStores(res.data);
             
-            }).catch(e=>{
-                console.error(e)
-                alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
-        })
+  //           }).catch(e=>{
+  //               console.error(e)
+  //               alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
+  //       })
 
-    }
+
+  //   }
   
     
-  }, [isTransformation])
+  // },[])
   
-
-
-  useEffect(()=>{
-    if(selectValue == "new"){
-      setData([...data.reverse()]);
-    }else{
-      setData([...data.reverse()]);
-    }
-  },[selectValue])
 
   let handelElement = (el)=>{
     setElement(el)
@@ -136,65 +147,66 @@ function Records() {
 
   }
 
-  let handelChangeSearchValue = (e)=>{
-      setSearchValue(e.target.value);
+  let handelResetting = (el) =>{
+    setIsTransformation(!isTransformation);
+    setStore_Id_1("");
+    setStatus_1_Id("")
+    setTrip_Id_1("");
+    setIsSearch(false)
   }
 
-  let handelChangeSelect = (e)=>{
-    setSelectValue(e.target.value)
-  }
 
-  let handelChangeSelect2 = (e)=>{
-    setTransformationList([]);
-    setSelectValue2(e.target.value)
+
+
+  let handelChangeSelectStatus_1 = (e)=>{
+    // setTransformationList([]);
+    setStatus_1_Id(e.target.value)
     if(e.target.value == ""){
-      setSelectValue3("");
-      setSelectValue4("");
-      setSelectValue5("");
+      setStatus_2_Id("");
+      setTrip_Id_2("");
+      setStore_Id_2("");
     }
   }
 
   let handelChangeSelect3 = (e)=>{
-    setSelectValue3(e.target.value)
+    setStatus_2_Id(e.target.value)
     if(e.target.value == "1"){
-      setSelectValue5("");
+      setTrip_Id_2("");
     }else if(e.target.value == "3"){
-      setSelectValue4("");
+      setStore_Id_2("");
     }else{
-      setSelectValue4("");
-      setSelectValue5("");
+      setTrip_Id_2("");
+      setStore_Id_2("");
     }
-  }
-  let handelChangeSelect4 = (e)=>{
-    setSelectValue4(e.target.value)
-  }
-
-  let handelChangeSelect5 = (e)=>{
-    setSelectValue5(e.target.value)
   }
 
   let handelCheck =(e,el)=>{
     let list  = transformationList;
     if(e.target.checked){
+      el.isCheck = true;
       list.push(el)
     }else{
+      el.isCheck = false;
       let index = list.indexOf(el)
       list.splice(index,1);
     }
 
     setTransformationList([...list])
   }
+  let handelCheckAll = (e)=>{
+    console.log("ddfdf")
+  }
 
   let handelSubmit = ()=> {
     if(isauth){
         if(transformationList){
-          axios.post(`${bisUrl}/office/records/`,{"records":transformationList,"expulsion_status":+selectValue3,"trip":selectValue5 ||null ,"store" : selectValue4 || null},config).then(()=>{
-            setIsTransformation(!isTransformation);
-            setSelectValue2("")
-            setSelectValue3("")
-            setSelectValue4("")
-            setSelectValue5("")
+          axios.post(`${bisUrl}/office/records/`,{"records":transformationList,"expulsion_status":+status_2_Id,"trip":trip_Id_2 ||null ,"store" : store_Id_2 || null},config).then(()=>{
+            setStatus_2_Id("")
+            setStore_Id_2("")
+            setTrip_Id_2("")
             setTransformationList([]);
+            handelResetting();
+            setIsSearch(false);
 
           }).catch((e)=>{
             console.log(e)
@@ -203,6 +215,22 @@ function Records() {
 
         }
     }
+  }
+
+  let handelSearch = ()=>{
+    if(isauth){
+      axios.get(`${bisUrl}/office/records/?trip=${trip_Id_1}&store=${store_Id_1}&expulsion_status=${status_1_Id}`,config).then((res)=>{
+        let datalist =  res.data.reverse()
+        datalist.forEach(el =>{
+          el.isCheck = false;
+        })
+          setData(datalist);
+          setIsSearch(true)
+        }).catch((e)=>{
+          console.log(e)
+          alert("حدث خطأ أثناء عملية الأضافة")
+        })
+  }
   }
 
 
@@ -218,39 +246,23 @@ function Records() {
         <Link to={'/office_home'} className="btn btn-outline-dark btn-sm w-100" style={{fontSize:'14px'}} role="button">رجوع</Link>
       </div>
 
-      {
-          check_permissions("office.add_customer") ? <div className='col-12 col-lg-2 col-md-3 col-sm-12'>
-          <Link to={'add'} className="btn btn-dark btn-sm w-100" style={{fontSize:'14px'}} role="button">إضافة سجل <FontAwesomeIcon icon={faAdd} /></Link>
-          </div> : <div className='col-12 col-lg-2 col-md-3 col-sm-12'>
-          <Link className="btn btn-secondary btn-sm w-100" style={{fontSize:'14px',cursor:"not-allowed"}} role="button">إضافة سجل <FontAwesomeIcon icon={faAdd} /></Link>
-          </div>
-      }
-
-      <div className='col-12 col-lg-3 col-md-3 col-sm-12'>
+      <div className='col-12 col-lg-3 col-md-2 col-sm-12'>
         
       <input 
-        onChange={(e)=>  handelChangeSearchValue(e)} 
+        onChange={(e)=> setSearchValue(e.target.value)} 
         type="text" 
         className="form-control  form-control-sm outline-none"
         style={{fontSize:'14px'}}
-        placeholder='بحث.. '/>
-      </div>
-
-      <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-        <select onChange={(e)=> handelChangeSelect(e)} value={selectValue} className="form-select form-select-sm"
-        style={{fontSize:'14px'}} 
-        id="floatingSelectGrid">
-            <option value="old">قديم</option>
-            <option value="new">جديد</option>
-        </select>
+        placeholder='يحث برقم الطرد...'/>
       </div>
 
 
+
       <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-        <select onChange={(e)=> handelChangeSelect2(e)} value={selectValue2} className="form-select form-select-sm"
+        <select onChange={(e)=> handelChangeSelectStatus_1(e)} value={status_1_Id} className="form-select form-select-sm"
         style={{fontSize:'14px'}} 
         id="floatingSelectGrid">
-            <option value="">الكل</option>
+            <option value="">كل الحالات</option>
             <option value="0">أستلام مكتب</option>
             <option value="1">أستلام مخزني</option>
             <option value="2">تسليم مخزني</option>
@@ -260,52 +272,54 @@ function Records() {
         </select>
       </div>
 
-      {
-        selectValue2 && check_permissions("office.add_motionrecording")?<div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-        <select onChange={(e)=> handelChangeSelect3(e)} value={selectValue3} className="form-select form-select-sm"
-        style={{fontSize:'14px'}} 
-        id="floatingSelectGrid">
-            <option value="0">أستلام مكتب</option>
-            <option value="1">أستلام مخزني</option>
-            <option value="2">تسليم مخزني</option>
-            <option value="3">أستلام مركبة </option>
-            <option value="4">تسليم مركبة </option>
-            <option value="5">أستلام المستلم</option>
-        </select>
-      </div>: null
-      }
+      <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
+            <select onChange={(e)=> setStore_Id_1(e.target.value) } value={store_Id_1} className="form-select form-select-sm"
+            style={{fontSize:'14px'}} 
+            id="floatingSelectGrid">
+                <option value="">أختر المخزن</option>
+                {stores.map(el =>{
+                    return <option value={el.id}>{el.name}</option>
+                })}
+            </select>
+        </div>
 
-      {
-        selectValue3 == "1" && selectValue2 !="" && check_permissions("office.add_motionrecording")?<div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-        <select onChange={(e)=> handelChangeSelect4(e)} value={selectValue4} className="form-select form-select-sm"
-        style={{fontSize:'14px'}} 
-        id="floatingSelectGrid">
-            <option value="">أختر المخزن</option>
-            {stores.map(el=>{
-              return <option value={el.id}>{el.name}</option>
-            })}
-        </select>
-      </div>: null
-      }
 
-      {
-        selectValue3 == "3" && selectValue2 !="" && check_permissions("office.add_motionrecording")?<div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-        <select onChange={(e)=> handelChangeSelect5(e)} value={selectValue5} className="form-select form-select-sm"
-        style={{fontSize:'14px'}} 
-        id="floatingSelectGrid">
-            <option value="">أختر الرحلة</option>
-            {trips.map(el => {
-              return <option value={el.id}>{el.name}</option>
-            })}
-        </select>
-      </div>: null
-      }
+        <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
+            <select onChange={(e)=> setTrip_Id_1(e.target.value)} value={trip_Id_1} className="form-select form-select-sm"
+            style={{fontSize:'14px'}} 
+            id="floatingSelectGrid">
+                <option value="">أختر الرحلة</option>
+                {trips.map(el =>{
+                    return <option value={el.id}>{el.id}</option>
+                })}
+            </select>
+        </div>
 
-      {
-        selectValue2 && check_permissions("office.add_motionrecording")? <div className='col-12 col-lg-3 col-md-3 col-sm-12'>
-         <button className='btn btn-sm btn-info w-100' onClick={(e)=> handelSubmit()} style={{fontSize:'14px',fontWeight:"bold"}} >تحويل</button>
-      </div>:null
-      }
+        <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
+            <select onChange={(e)=> setCity_name(e.target.value)} value={city_name} className="form-select form-select-sm"
+            style={{fontSize:'14px'}} 
+            id="floatingSelectGrid">
+                <option value="">أختر مدينة</option>
+                {city.map(el =>{
+                    return <option value={el.name}>{el.name}</option>
+                })}
+            </select>
+        </div>
+
+
+        {
+          status_1_Id !="" || store_Id_1!="" || trip_Id_1!=""? <>
+          <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
+            <button className='btn btn-sm btn-dark w-100' onClick={(e)=> handelSearch()} style={{fontSize:'14px',fontWeight:"bold"}}><FontAwesomeIcon icon={faSearch} /> بحث</button>
+          </div>
+          </>
+          :
+          null
+        }
+
+        <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
+            <button className='btn btn-sm btn-secondary w-100' onClick={(e)=> handelResetting()} style={{fontSize:'14px',fontWeight:"bold"}}>إعاده ضبط</button>
+        </div>
 
       {
         check_permissions("office.view_motionrecording") ? <div className='col-12 col-lg-3 col-md-3 col-sm-12'>
@@ -313,9 +327,71 @@ function Records() {
       </div>:null
       }
 
+        
 
+
+      </div>
+
+
+     {
+      isSearch &&  <div className='row g-3 mt-3'>
+      <span><b>ترحيل الئ</b></span>
+    {
+      check_permissions("office.add_motionrecording")?<div className='col-12 col-lg-2 col-md-2 col-sm-12'>
+      <select onChange={(e)=> handelChangeSelect3(e)} value={status_2_Id} className="form-select form-select-sm"
+      style={{fontSize:'14px'}} 
+      id="floatingSelectGrid">
+          <option value="0">أستلام مكتب</option>
+          <option value="1">أستلام مخزني</option>
+          <option value="2">تسليم مخزني</option>
+          <option value="3">أستلام مركبة </option>
+          <option value="4">تسليم مركبة </option>
+          <option value="5">أستلام المستلم</option>
+      </select>
+    </div>: null
+    }
+
+    {
+      status_2_Id == "1" && check_permissions("office.add_motionrecording")?<div className='col-12 col-lg-2 col-md-2 col-sm-12'>
+      <select onChange={(e)=> setStore_Id_2(e.target.value)} value={store_Id_2} className="form-select form-select-sm"
+      style={{fontSize:'14px'}} 
+      id="floatingSelectGrid">
+          <option value="">أختر المخزن</option>
+          {stores.map(el=>{
+            return <option value={el.id}>{el.name}</option>
+          })}
+      </select>
+    </div>: null
+    }
+
+    {
+      status_2_Id == "3" && check_permissions("office.add_motionrecording")?<div className='col-12 col-lg-2 col-md-2 col-sm-12'>
+      <select onChange={(e)=> setTrip_Id_2(e.target.value)} value={trip_Id_2} className="form-select form-select-sm"
+      style={{fontSize:'14px'}} 
+      id="floatingSelectGrid">
+          <option value="">أختر الرحلة</option>
+          {trips.map(el => {
+            return <option value={el.id}>{el.name}</option>
+          })}
+      </select>
+    </div>: null
+    }
+
+    {
+       (((status_2_Id && (trip_Id_2 || store_Id_2)) || (status_2_Id !="1" && status_2_Id != "3") ) && transformationList.length !=0) &&  check_permissions("office.add_motionrecording")? <div className='col-12 col-lg-3 col-md-3 col-sm-12'>
+          <button className='btn btn-sm btn-info w-100' onClick={(e)=> handelSubmit()} style={{fontSize:'14px',fontWeight:"bold"}} >ترحيل</button>
+    </div>:null
+    }
+
+  
 
     </div>
+     }
+
+
+
+      
+
 
     {isLoad ?
     <Loader/>
@@ -324,7 +400,7 @@ function Records() {
       <table className="table table-striped">
         <thead>
             <tr>
-              <th scope='col'> {selectValue2 && "اختيار"}</th>
+              <th scope='col'> {isSearch && "اختيار"}</th>
               <th scope="col">الرقم</th>
               <th scope="col">رقم الطرد</th>
               <th scope="col">حالة الطرد</th>
@@ -339,9 +415,9 @@ function Records() {
         <tbody>
           { data.map((el,index)=>{
 
-            return el.expulsion.toString().startsWith(searchValue) && el.expulsion_status.toString().startsWith(selectValue2)? <tr key={index}>
-            <th scope="row">{selectValue2 && <input class="form-check-input"  onChange={(e)=> handelCheck(e,el)}  type="checkbox" aria-label="Text for screen reader"/> }</th>
-            <th scope="row">{selectValue =="old" ? index+1 : data.length - index}</th>
+            return el.expulsion.toString().startsWith(searchValue) && el.name_city.startsWith(city_name) ? <tr key={index}>
+            <th scope="row">{isSearch && <input class="form-check-input"  onChange={(e)=> handelCheck(e,el)}  type="checkbox" aria-label="Text for screen reader"/> }</th>
+            <th scope="row">{data.length - index}</th>
             <td>{el.expulsion}</td>
             <td>{el.name_expulsion_status}</td>
             <td>{el.name_store || "لايوجد"}</td>

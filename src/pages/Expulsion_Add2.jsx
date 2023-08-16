@@ -72,11 +72,26 @@ function Expulsion_Add2() {
       axios.post(`${bisUrl}/office/expulsions/`,{content,price,recipient_phone_1:`+967${recipient_phone_1}`,recipient_phone_2:`+967${recipient_phone_2}`,recipient_name,type_price,type_currency,precious,customer:customerId,to_office:officeId,to_city:cityId},config).then(()=>{
           action.resetForm();
           setIsSave(false);
-          navigate("/expulsion")
+          navigate("/customer")
       }).catch((e)=>{
           setIsSave(false);
           console.log(e)
-          alert("حدث خطأ أثناء عملية الأضافة")
+          if(e.response.status == 400){
+            let messes = '';
+            for (const i in e.response.data) {
+              let listError = e.response.data[i];
+              listError.forEach(el => {
+                messes +=` تحذير : ${el} \n` 
+              })
+              
+            }
+            alert(messes)
+
+
+          }else{
+
+            alert("حدث خطأ أثناء عملية الأضافة")
+          }
       })
   
     }
@@ -101,7 +116,7 @@ function Expulsion_Add2() {
     >
       {({isSubmitting}) => (
         <Form>
-          <div className='row g-3'>
+          <div className='row g-3 mb-3'>
             <div className='col-12 col-lg-6 col-md-6 col-sm-12'>
               <CustomInput
                 label={"أسم المستلم:"}

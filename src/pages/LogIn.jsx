@@ -45,6 +45,7 @@ import "../components/login.css"
           }
         }
       }).catch((e)=>{
+        setIsErorr(false);
         console.error(e)
         if(e.response.status == 400){
           setIsErorr(true)
