@@ -96,7 +96,7 @@ function Print_3() {
             })
             setData([..._data]);
 
-            setIsTransformation(data);
+            setTransformationList(data);
         }else{
             let _data = data;
             _data.forEach(el => {
@@ -104,7 +104,7 @@ function Print_3() {
             })
             setData([..._data]);
 
-            setIsTransformation([]);
+            setTransformationList([]);
         }
 
     }

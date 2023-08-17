@@ -9,6 +9,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Alert from '../components/Alert';
 import { check_permissions } from '../context/permissions';
+import BtnLoader from '../components/BtnLoader';
 
 function Records() {
   const [data, setData] = useState([]);
@@ -34,6 +35,10 @@ function Records() {
   const [city_name ,setCity_name] = useState("");
 
   let [isSearch,setIsSearch] = useState(false);
+
+  let [isCheckAll, setIsCheckAll] = useState(false);
+
+  let [isSend, setIsSend] = useState(false);
 
   const authHeader = useAuthHeader()
   const config = {
@@ -192,13 +197,37 @@ function Records() {
     }
 
     setTransformationList([...list])
+
+    if(transformationList.length == 0){
+      setIsCheckAll(false)
+    }
   }
+
   let handelCheckAll = (e)=>{
-    console.log("ddfdf")
+    setIsCheckAll(!isCheckAll);
+      if(e.target.checked){
+        let _data = data;
+        _data.forEach(el => {
+            el.isCheck = true;
+        })
+        setData([..._data]);
+
+        setTransformationList(data);
+      }else{
+        let _data = data;
+        _data.forEach(el => {
+            el.isCheck = false;
+        })
+        setData([..._data]);
+
+        setTransformationList([]);
+      }
   }
 
   let handelSubmit = ()=> {
     if(isauth){
+      setIsSend(true);
+
         if(transformationList){
           axios.post(`${bisUrl}/office/records/`,{"records":transformationList,"expulsion_status":+status_2_Id,"trip":trip_Id_2 ||null ,"store" : store_Id_2 || null},config).then(()=>{
             setStatus_2_Id("")
@@ -207,9 +236,11 @@ function Records() {
             setTransformationList([]);
             handelResetting();
             setIsSearch(false);
+            setIsSend(false);
 
           }).catch((e)=>{
             console.log(e)
+            setIsSend(true);
             alert("حدث خطأ أثناء عملية الأضافة")
           })
 
@@ -379,7 +410,11 @@ function Records() {
 
     {
        (((status_2_Id && (trip_Id_2 || store_Id_2)) || (status_2_Id !="1" && status_2_Id != "3") ) && transformationList.length !=0) &&  check_permissions("office.add_motionrecording")? <div className='col-12 col-lg-3 col-md-3 col-sm-12'>
-          <button className='btn btn-sm btn-info w-100' onClick={(e)=> handelSubmit()} style={{fontSize:'14px',fontWeight:"bold"}} >ترحيل</button>
+          <button className='btn btn-sm btn-info w-100' disabled={isSend} onClick={(e)=> handelSubmit()} style={{fontSize:'14px',fontWeight:"bold"}} >
+            {
+              isSend ? <BtnLoader/> : "ترحيل"
+            }
+          </button>
     </div>:null
     }
 
@@ -400,7 +435,7 @@ function Records() {
       <table className="table table-striped">
         <thead>
             <tr>
-              <th scope='col'> {isSearch && "اختيار"}</th>
+              <th scope='col'> {isSearch &&<><input class="form-check-input" checked={isCheckAll} onChange={(e)=> handelCheckAll(e)}  type="checkbox" aria-label="Text for screen reader"/> الكل</>}</th>
               <th scope="col">الرقم</th>
               <th scope="col">رقم الطرد</th>
               <th scope="col">حالة الطرد</th>
@@ -416,7 +451,7 @@ function Records() {
           { data.map((el,index)=>{
 
             return el.expulsion.toString().startsWith(searchValue) && el.name_city.startsWith(city_name) ? <tr key={index}>
-            <th scope="row">{isSearch && <input class="form-check-input"  onChange={(e)=> handelCheck(e,el)}  type="checkbox" aria-label="Text for screen reader"/> }</th>
+            <th scope="row">{isSearch && <input class="form-check-input" checked={el.isCheck}  onChange={(e)=> handelCheck(e,el)}  type="checkbox" aria-label="Text for screen reader"/> }</th>
             <th scope="row">{data.length - index}</th>
             <td>{el.expulsion}</td>
             <td>{el.name_expulsion_status}</td>
