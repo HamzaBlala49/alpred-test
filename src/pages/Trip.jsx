@@ -26,7 +26,7 @@ function Trip() {
     setIsLoad(true)
     if(isauth()){
       axios.get(`${bisUrl}/office/trips/`,config).then(res=>{
-        setData(res.data);
+        setData(res.data.reverse());
         setIsLoad(false)
 
       }).catch(e=>{
@@ -39,13 +39,6 @@ function Trip() {
 
   },[]);
 
-  useEffect(()=>{
-    if(selectValue == "new"){
-      setData([...data.reverse()]);
-    }else{
-      setData([...data.reverse()]);
-    }
-  },[selectValue])
 
   let handelElement = (el)=>{
     setElement(el)
@@ -150,13 +143,13 @@ function Trip() {
           { data.map((el,index)=>{
 
             return el.name.startsWith(searchValue) ? <tr key={index}>
-            <th scope="row">{selectValue =="old" ? index+1 : data.length - index}</th>
+            <th scope="row">{data.length - index}</th>
             <td>{el.name}</td>
             <td>{el.name_drive}</td>
             <td>{el.phone_dirve_1 || "لايوجد"}</td>
             <td>{el.phone_dirve_2 || "لايوجد"}</td>
-            <td>{el.name_from_office}</td>
-            <td>{el.name_to_office}</td>
+            <td>{el.name_from_office || "لايوجد"}</td>
+            <td>{el.name_to_office || "لايوجد"}</td>
             <td>{el.name_vehicle}</td>
             <td>{el.create_at.slice(0,10)}</td>
             <td> <Link  to={`print/${el.id}`} role='button'><FontAwesomeIcon className='text-warning' icon={faPrint} /></Link></td>

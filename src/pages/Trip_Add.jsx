@@ -8,6 +8,7 @@ import CustomInput from '../components/CustomInput';
 import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
+import BtnLoader from '../components/BtnLoader';
 
 function Trip_Add() {
 
@@ -104,7 +105,7 @@ function Trip_Add() {
 
           <div className="mb-3">
             <label className="form-label fs-6"> الئ مكتب:</label>
-            <select onChange={(e)=> setOfficeId(+e.target.value)}  value={officeId} className="form-select form-select-sm"
+            <select onChange={(e)=> setOfficeId(e.target.value)}  value={officeId} className="form-select form-select-sm"
                 style={{fontSize:'14px',width:'300px' }} 
                 id="floatingSelectGrid">
                   <option value="">لايوجد</option>
@@ -129,7 +130,11 @@ function Trip_Add() {
 
           <Link role='button' to={"/trip"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">
+              {
+                isSave ? <BtnLoader/> : "حفظ"
+              } 
+          </button>
         </Form>
       )}
     </Formik>

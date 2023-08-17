@@ -13,10 +13,11 @@ function Office() {
   const [data, setData] = useState([]);
   let [isLoad, setIsLoad] = useState(false);
   let [element,setElement] = useState(null);
-  let [searchValue,setSearchValue] = useState("")
-  let [selectValue,setSelectValue] = useState("old");
-  let [selectValue2,setSelectValue2] = useState("");
-  let [selectDate,setSelectDate] = useState("");
+  let [searchValue,setSearchValue] = useState("");
+  let [city,setCity] = useState([]);
+  let [city_name,setCity_name] = useState("");
+
+
   const authHeader = useAuthHeader()
   const config = {
     headers: { 'Authorization': authHeader() }
@@ -30,7 +31,7 @@ function Office() {
     setIsLoad(true)
     if(isauth()){
       axios.get(`${bisUrl}/office/office`,config).then(res=>{
-        setData(res.data);
+        setData(res.data.reverse());
         setIsLoad(false)
 
       }).catch(e=>{
@@ -39,17 +40,19 @@ function Office() {
       alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
       })
 
+
+      axios.get(`${bisUrl}/places/city`,config).then(res=>{
+        setCity(res.data.reverse());
+      }).catch(e=>{
+        console.error(e)
+        alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
+      });
+
+
     }
 
   },[])
   
-  useEffect(()=>{
-    if(selectValue == "new"){
-      setData([...data.reverse()]);
-    }else{
-      setData([...data.reverse()]);
-    }
-  },[selectValue])
 
   let handelElement = (el)=>{
     setElement(el)
@@ -103,7 +106,6 @@ function Office() {
           <Link className="btn btn-secondary btn-sm w-100" style={{fontSize:'14px',cursor:"not-allowed"}} role="button">إضافة مكتب <FontAwesomeIcon icon={faAdd} /></Link>
           </div>
         }
-       
 
         <div className='col-12 col-lg-3 col-md-3 col-sm-12'>
         <input 
@@ -111,17 +113,19 @@ function Office() {
           type="text" 
           className="form-control  form-control-sm outline-none"
           style={{fontSize:'14px'}}
-          placeholder='بحث.. '/>
+          placeholder='بحث بالأسم .. '/>
         </div>
 
         <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-          <select onChange={(e)=> handelChangeSelect(e)} value={selectValue} className="form-select form-select-sm"
+        <select onChange={(e)=> setCity_name(e.target.value)}  value={city_name} className="form-select form-select-sm"
           style={{fontSize:'14px'}} 
           id="floatingSelectGrid">
-              <option value="old">قديم</option>
-              <option value="new">جديد</option>
-          </select>
-        </div>
+            <option value="">كل المدن</option>
+            {city.map(el=>{
+              return <option key={el.id} value={el.name}>{el.name}</option>
+            })}
+        </select> 
+      </div>
 
       </div>
 
@@ -146,22 +150,22 @@ function Office() {
           <tbody>
             { data.map((el,index)=>{
 
-              return el.name.startsWith(searchValue) ? <tr key={index}>
-              <th scope="row">{selectValue =="old" ? index+1 : data.length - index}</th>
+              return el.name.startsWith(searchValue) && el.name_city.startsWith(city_name) ? <tr key={index}>
+              <th scope="row">{data.length - index}</th>
               <td>{el.name}</td>
               <td>{el.name_city}</td>
               <td>{el.phone}</td>
               <td>{el.name_user}</td>
               <td>{el.create_at.slice(0,10)}</td>
 
-             {
-                check_permissions("office.change_office")?  <td> <Link  to={`${el.id}`} role='button'><FontAwesomeIcon className='text-success' icon={faPenToSquare} /></Link></td>: <td> <Link  style={{cursor:"not-allowed"}} role='button'><FontAwesomeIcon className='text-secondary' icon={faPenToSquare} /></Link></td>
-             }
-             {
+              {
+                  check_permissions("office.change_office")?  <td> <Link  to={`${el.id}`} role='button'><FontAwesomeIcon className='text-success' icon={faPenToSquare} /></Link></td>: <td> <Link  style={{cursor:"not-allowed"}} role='button'><FontAwesomeIcon className='text-secondary' icon={faPenToSquare} /></Link></td>
+              }
+              {
 
-              check_permissions("office.delete_office") ? <td> <a role='button'  data-bs-toggle="modal"   onClick={()=> handelElement(el)}  data-bs-target={"#ModalD"}><FontAwesomeIcon className='text-danger'  icon={faTrashCan} /></a></td> : <td> <a role='button'  style={{cursor:"not-allowed"}} ><FontAwesomeIcon className='text-secondary'  icon={faTrashCan} /></a></td>
+                check_permissions("office.delete_office") ? <td> <a role='button'  data-bs-toggle="modal"   onClick={()=> handelElement(el)}  data-bs-target={"#ModalD"}><FontAwesomeIcon className='text-danger'  icon={faTrashCan} /></a></td> : <td> <a role='button'  style={{cursor:"not-allowed"}} ><FontAwesomeIcon className='text-secondary'  icon={faTrashCan} /></a></td>
 
-             }
+              }
   
             </tr>
             :

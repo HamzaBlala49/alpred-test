@@ -13,8 +13,9 @@ function Store() {
   const [data, setData] = useState([]);
   let [isLoad, setIsLoad] = useState(false);
   let [element,setElement] = useState(null);
+  let [office,setOffice] = useState([]);
+  let [office_name,setOffice_name] = useState("");
   let [searchValue,setSearchValue] = useState("")
-  let [selectValue,setSelectValue] = useState("old");
 
   const authHeader = useAuthHeader()
   const config = {
@@ -22,14 +23,13 @@ function Store() {
   };
   let isauth = useIsAuthenticated();
 
-  
 
 
   useEffect(() => {
     setIsLoad(true)
     if(isauth()){
       axios.get(`${bisUrl}/office/stores/`,config).then(res=>{
-        setData(res.data);
+        setData(res.data.reverse());
         setIsLoad(false)
 
       }).catch(e=>{
@@ -38,17 +38,22 @@ function Store() {
       alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
       })
 
+      axios.get(`${bisUrl}/office/office/`,config).then(res=>{
+        setOffice(res.data.reverse());
+        setIsLoad(false)
+
+      }).catch(e=>{
+        console.error(e)
+
+      alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
+      })
+
+
+
     }
 
   },[])
   
-  useEffect(()=>{
-    if(selectValue == "new"){
-      setData([...data.reverse()]);
-    }else{
-      setData([...data.reverse()]);
-    }
-  },[selectValue])
 
   let handelElement = (el)=>{
     setElement(el)
@@ -81,7 +86,6 @@ function Store() {
     setSelectValue(e.target.value)
   }
 
- 
 
 
   return (
@@ -110,24 +114,20 @@ function Store() {
         type="text" 
         className="form-control  form-control-sm outline-none"
         style={{fontSize:'14px'}}
-        placeholder='بحث.. '/>
+        placeholder='بحث برقم المخزن.. '/>
       </div>
 
       <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-        <select onChange={(e)=> handelChangeSelect(e)} value={selectValue} className="form-select form-select-sm"
-        style={{fontSize:'14px'}} 
-        id="floatingSelectGrid">
-            <option value="old">قديم</option>
-            <option value="new">جديد</option>
-        </select>
+        <select onChange={(e)=> setOffice_name(e.target.value)}  value={office_name} className="form-select form-select-sm"
+          style={{fontSize:'14px'}} 
+          id="floatingSelectGrid">
+            <option value="">كل  المكاتب</option>
+            {office.map(el=>{
+              return <option key={el.id} value={el.name}>{el.name}</option>
+            })}
+        </select> 
       </div>
 
-
-      
-
-      
-
-      
 
 
     </div>
@@ -146,14 +146,13 @@ function Store() {
               <th scope="col">تاريخ الانشاء</th>
               <th scope="col" className='text-success'>تعديل</th>
               <th scope="col" className='text-danger'>حذف</th>
-
             </tr>
         </thead>
         <tbody>
           { data.map((el,index)=>{
 
-            return el.name.startsWith(searchValue) ? <tr key={index}>
-            <th scope="row">{selectValue =="old" ? index+1 : data.length - index}</th>
+            return el.number.toString().startsWith(searchValue) && el.name_office.startsWith(office_name) ? <tr key={index}>
+            <th scope="row">{data.length - index}</th>
             <td>{el.name}</td>
             <td>{el.number}</td>
             <td>{el.name_office}</td>
@@ -161,15 +160,11 @@ function Store() {
 
             {
                 check_permissions("office.change_store")?  <td> <Link  to={`${el.id}`} role='button'><FontAwesomeIcon className='text-success' icon={faPenToSquare} /></Link></td>: <td> <Link  style={{cursor:"not-allowed"}} role='button'><FontAwesomeIcon className='text-secondary' icon={faPenToSquare} /></Link></td>
-             }
-             {
+            }
+            {
 
               check_permissions("office.delete_store") ? <td> <a role='button'  data-bs-toggle="modal"   onClick={()=> handelElement(el)}  data-bs-target={"#ModalD"}><FontAwesomeIcon className='text-danger'  icon={faTrashCan} /></a></td> : <td> <a role='button'  style={{cursor:"not-allowed"}} ><FontAwesomeIcon className='text-secondary'  icon={faTrashCan} /></a></td>
-
-             }
-          
-            
-           
+            }
           </tr>
           :
           null

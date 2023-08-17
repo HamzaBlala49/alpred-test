@@ -9,6 +9,7 @@ import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router';
+import BtnLoader from '../components/BtnLoader';
 
 function Store_Edit() {
   let navigate = useNavigate()
@@ -137,7 +138,11 @@ let handelSubmit = (values,action)=>{
 
           <Link role='button' to={"/store"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">
+              {
+                isSave ? <BtnLoader/> : "حفظ"
+              } 
+          </button>        
         </Form>
       )}
     </Formik>

@@ -8,6 +8,8 @@ import { useSignIn } from 'react-auth-kit';
 import { bisUrl } from '../context/biseUrl';
 import { useNavigate } from 'react-router';
 import "../components/login.css"
+import BtnLoader from '../components/BtnLoader';
+
 // import {useIsAuthenticated , useAuthHeader,useSignIn} from 'react-auth-kit';
 
   function LogIn() {
@@ -15,10 +17,11 @@ import "../components/login.css"
   const navigate = useNavigate();
   let [isErorr,setIsErorr]= useState(false);
   // const authHeader =  useAuthHeader();
+  let [islogin,setIslogin]= useState(false);
 
 
   let handelSubmit = async (values)=>{
-    
+      setIslogin(true);
       await axios.post(`${bisUrl}/login/`,{...values}).then(async (res)=>{
       if(res.data){
 
@@ -38,6 +41,7 @@ import "../components/login.css"
           tokenType:'token',
           authState:res.data["key"],
         })){
+              setIslogin(false);
               setIsErorr(false);
               navigate("/");
           }else{
@@ -45,6 +49,7 @@ import "../components/login.css"
           }
         }
       }).catch((e)=>{
+        setIslogin(false)
         setIsErorr(false);
         console.error(e)
         if(e.response.status == 400){
@@ -90,7 +95,11 @@ import "../components/login.css"
                     {
                       isErorr && <p className="text-danger m-0" style={{fontSize:"16px",fontWeight:"bold"}}>أنت غير مصرح تأكد من صحة المدخلات*</p>
                     }
-                    <button type="submit" className="btn btn-dark  w-100 ">تسجيل الدخول</button>
+                    <button type="submit" disabled={islogin} className="btn btn-dark  w-100 ">
+                      {
+                        islogin ? <BtnLoader/> :"تسجيل الدخول"
+                      }
+                    </button>
                   </div>
                   </div>
               </Form>

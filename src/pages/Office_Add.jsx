@@ -8,24 +8,27 @@ import CustomInput from '../components/CustomInput';
 import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
+import BtnLoader from '../components/BtnLoader';
 
 
 function Office_Add() {
   const navigate = useNavigate();
   const [isSave, setIsSave] = useState(false);
-  // const [phoneVal , setPhoneVal] = useState(false);
   const [city,setCity] = useState([]);
   const [cityId,setCityId] = useState(null);
   const [users,setUsers] = useState([]);
   const [sendUsers,setSendUsers] = useState([]);
   const authHeader = useAuthHeader()
   let isauth = useIsAuthenticated()
+  let [usersVal,setUsersVal] = useState(false);
+
 
   const config = {
     headers: { 'Authorization': authHeader() }
   };
 
     useEffect(()=>{
+   
 
       if(isauth()){
 
@@ -47,52 +50,43 @@ function Office_Add() {
   useEffect(()=>{
     setCityId(city[0]?.id)
   },[city]);
-
-  // useEffect(()=>{
-  //   let list = [];
-  //   users
-  // },[users]);
   
 
   let handelSubmit = (values,action)=>{
-    if(isauth()){
-      setIsSave(true);
-      // setPhoneVal(false);
-      let {name,phone} = values;
-
-      axios.post(`${bisUrl}/office/office/`,{name,phone:`+967${phone}`,user:sendUsers,city:cityId},config).then(()=>{
-
-          action.resetForm();
-          setIsSave(false);
-          navigate('/office')
-    
-      }).catch((e)=>{
-          console.log(e);
-          setIsSave(false);
-          
-          if(e.response.status == 400){
-            // setPhoneVal(true);
-            let messes = '';
-            for (const i in e.response.data) {
-              let listError = e.response.data[i];
-              listError.forEach(el => {
-                messes +=` تحذير : ${el} \n` 
-              })
-              
+    if(sendUsers.length > 0){
+      if(isauth()){
+        setIsSave(true);
+        axios.post(`${bisUrl}/office/office/`,{...values,user:sendUsers,city:cityId},config).then(()=>{
+            action.resetForm();
+            setIsSave(false);
+            setUsersVal(false);
+            navigate('/office')
+      
+        }).catch((e)=>{
+            console.log(e);
+            setIsSave(false);
+            if(e.response.status == 400){
+              let messes = '';
+              for (const i in e.response.data) {
+                let listError = e.response.data[i];
+                listError.forEach(el => {
+                  messes +=` تحذير : ${el} \n` 
+                })
+                
+              }
+              alert(messes)
+  
+  
+            }else{
+  
+              alert("حدث خطأ أثناء عملية الأضافة")
             }
-            alert(messes)
+        })
+      }
 
-
-          }else{
-
-            alert("حدث خطأ أثناء عملية الأضافة")
-          }
-      })
-
-
-
+    }else{
+      setUsersVal(true);
     }
-    
 
   }
 
@@ -152,12 +146,14 @@ function Office_Add() {
 
           <div className='mb-3'>
             <label className="form-label fs-6 d-block">المستخدمين:</label>
-           {users.map(el=>{  return <div class="form-check form-check-inline" key={el.id}>
-                <input class="form-check-input" onChange={(e)=> handelcheck(e)} type="checkbox" id={el.id} value={el.id}/>
-                <label class="form-check-label" for="inlineCheckbox1">{el.username}</label>
-              </div>
-           })}
-
+            {users.map(el=>{  return <div class="form-check form-check-inline" key={el.id}>
+                  <input class="form-check-input" onChange={(e)=> handelcheck(e)} type="checkbox" id={el.id} value={el.id}/>
+                  <label class="form-check-label" for="inlineCheckbox1">{el.username}</label>
+                </div>
+            })}
+            {
+              usersVal && <p className='text-danger' style={{fontSize:"14px"}}>*يجب أن تختار مستخدم</p>
+            }
           </div>
 
           
@@ -165,7 +161,11 @@ function Office_Add() {
 
           <Link role='button' to={"/office"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">
+              {
+                isSave ? <BtnLoader/> : "حفظ"
+              } 
+          </button>
         </Form>
       )}
     </Formik>

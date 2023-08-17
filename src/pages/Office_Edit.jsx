@@ -9,6 +9,7 @@ import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router';
+import BtnLoader from '../components/BtnLoader';
 
 function Office_Edit() {
   let navigate = useNavigate()
@@ -25,6 +26,8 @@ function Office_Edit() {
   const [sendUsers,setSendUsers] = useState([]);
   const authHeader = useAuthHeader();
   let isauth = useIsAuthenticated();
+  let [usersVal,setUsersVal] = useState(false);
+
 
   const config = {
     headers: { 'Authorization': authHeader() }
@@ -34,7 +37,7 @@ function Office_Edit() {
 
       if(isauth()){
 
-         axios.get(`${bisUrl}/office/office/${Id}`,config).then(res=>{
+        axios.get(`${bisUrl}/office/office/${Id}`,config).then(res=>{
           setElement(res.data)
         }).catch(e=>{
           alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
@@ -100,37 +103,38 @@ function Office_Edit() {
   
 
   let handelSubmit = (values,action)=>{
-    if(isauth()){
-      setIsSave(true);
-      let {name,phone} = values;
-      console.log(phone)
-
-      axios.put(`${bisUrl}/office/office/${Id}/`,{name,phone:`+967${phone}`,user:sendUsers,city:cityId},config).then(()=>{
-        action.resetForm();
-        setIsSave(false);
-          navigate("/office");
-    
-      }).catch((e)=>{
+    if(sendUsers.length > 0){
+      if(isauth()){
+        setIsSave(true);
+        axios.put(`${bisUrl}/office/office/${Id}/`,{...values,user:sendUsers,city:cityId},config).then(()=>{
+          action.resetForm();
           setIsSave(false);
-          console.error(e)
-          if(e.response.status == 400){
-            let messes = '';
-            for (const i in e.response.data) {
-              let listError = e.response.data[i];
-              listError.forEach(el => {
-                messes +=` تحذير : ${el} \n` 
-              })
-              
+          setUsersVal(false);
+          navigate("/office");
+      
+        }).catch((e)=>{
+            setIsSave(false);
+            console.error(e)
+            if(e.response.status == 400){
+              let messes = '';
+              for (const i in e.response.data) {
+                let listError = e.response.data[i];
+                listError.forEach(el => {
+                  messes +=` تحذير : ${el} \n` 
+                })
+                
+              }
+              alert(messes)
+  
+            }else{
+              alert("حدث خطأ أثناء عملية الأضافة")
             }
-            alert(messes)
-
-
-          }else{
-
-            alert("حدث خطأ أثناء عملية الأضافة")
-          }
-      })
+        })
+      }
+    }else{
+      setUsersVal(true);
     }
+    
   }
 
   let handelcheck = (e)=>{
@@ -143,7 +147,6 @@ function Office_Edit() {
       list.splice(i,1);
     }
     setSendUsers([...list]);
-
   }
 
 
@@ -156,8 +159,8 @@ function Office_Edit() {
 
     <Formik 
       initialValues={{
-        name:""||name,
-        phone:""|| phone?.length == 13 ? +phone?.slice(4,13): +phone?.slice(3,12) ,
+        name:""|| name,
+        phone:""|| phone,
       }}
       validationSchema={officeSchema}
       enableReinitialize={true}
@@ -197,6 +200,10 @@ function Office_Edit() {
               </div>
            })}
 
+            {
+              usersVal && <p className='text-danger' style={{fontSize:"14px"}}>*يجب أن تختار مستخدم</p>
+            }
+
           </div>
 
           
@@ -204,7 +211,11 @@ function Office_Edit() {
 
           <Link role='button' to={"/office"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">
+              {
+                isSave ? <BtnLoader/> : "حفظ"
+              } 
+          </button>
         </Form>
       )}
     </Formik>

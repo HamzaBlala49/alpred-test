@@ -9,6 +9,7 @@ import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router';
+import BtnLoader from '../components/BtnLoader';
 
 function Trip_Edit() {
   let navigate = useNavigate()
@@ -123,9 +124,10 @@ let handelSubmit = (values,action)=>{
 
           <div className="mb-3">
             <label className="form-label fs-6"> الئ مكتب:</label>
-            <select onChange={(e)=> setOfficeId(+e.target.value)}  value={OfficeId} className="form-select form-select-sm"
+            <select onChange={(e)=> setOfficeId(e.target.value)}  value={OfficeId} className="form-select form-select-sm"
                 style={{fontSize:'14px',width:'300px' }} 
                 id="floatingSelectGrid">
+                  <option value="">لايوجد</option>
                   {office.map(el=>{
                     return <option key={el.id} value={el.id}>{el.name}</option>
                   })}
@@ -147,7 +149,11 @@ let handelSubmit = (values,action)=>{
 
           <Link role='button' to={"/trip"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">
+              {
+                isSave ? <BtnLoader/> : "حفظ"
+              } 
+          </button>
         </Form>
       )}
     </Formik>

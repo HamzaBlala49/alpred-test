@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 const officeSchema = yup.object().shape({
     name:yup.string().min(3,"يجب أن يكون الأدخال أكثر من 3 حروف").max(200,"يجب أن يكون أقل من 25 حرفاً").required("هذا الحقل مطلوب"),
-    phone:yup.string().test("len" ," يجب أن يكون 9 ارقام أو 8 ارقام اذا كان رقم هاتف ادخل مفتاح المحافظة ", val => val.toString().length === 9 || val.toString().length === 8  ).required("هذا الحقل مطلوب"),
+    phone:yup.string().matches(/^[0-9]+$/,"يجب أن يكون رقماً").test("len" ," يجب أن يكون 9 ارقام أو 8 ارقام اذا كان رقم هاتف ادخل مفتاح المحافظة ", val => val.toString().length === 9 || val.toString().length === 8  ).required("هذا الحقل مطلوب"),
 })
 
 const storeSchema = yup.object().shape({
