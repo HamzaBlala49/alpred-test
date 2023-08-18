@@ -44,13 +44,13 @@ function Office_Edit() {
         })
 
          axios.get(`${bisUrl}/places/city`,config).then(res=>{
-          setCity(res.data);
+          setCity(res.data.reverse());
         }).catch(e=>{
           alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
         })
 
          axios.get(`${bisUrl}/accounts/users`,config).then(res=>{
-          setUsers(res.data);
+          setUsers(res.data.reverse());
         }).catch(e=>{
           alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
         })

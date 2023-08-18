@@ -33,7 +33,7 @@ function Store_Edit() {
     if(isauth()){
 
       axios.get(`${bisUrl}/office/office/`,config).then(res=>{
-        setOffice(res.data);
+        setOffice(res.data.reverse());
       }).catch(e=>{
         alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
       })

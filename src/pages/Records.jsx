@@ -48,6 +48,7 @@ function Records() {
 
   useEffect(() => {
     setIsLoad(true)
+    setIsCheckAll(false)
 
     if(isauth()){
       axios.get(`${bisUrl}/office/records/`,config).then(res=>{
@@ -250,6 +251,8 @@ function Records() {
 
   let handelSearch = ()=>{
     if(isauth){
+      setTransformationList([]);
+      setIsCheckAll(false)
       axios.get(`${bisUrl}/office/records/?trip=${trip_Id_1}&store=${store_Id_1}&expulsion_status=${status_1_Id}`,config).then((res)=>{
         let datalist =  res.data.reverse()
         datalist.forEach(el =>{

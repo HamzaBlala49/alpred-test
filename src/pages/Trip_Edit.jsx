@@ -43,13 +43,13 @@ function Trip_Edit() {
 
 
       axios.get(`${bisUrl}/office/office/`,config).then(res=>{
-        setOffice(res.data);
+        setOffice(res.data.reverse());
       }).catch(e=>{
         alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
       })
 
       axios.get(`${bisUrl}/vehicle/vehicle/`,config).then(res=>{
-        setVehicles(res.data);
+        setVehicles(res.data.reverse());
       }).catch(e=>{
         alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
       })
@@ -127,7 +127,6 @@ let handelSubmit = (values,action)=>{
             <select onChange={(e)=> setOfficeId(e.target.value)}  value={OfficeId} className="form-select form-select-sm"
                 style={{fontSize:'14px',width:'300px' }} 
                 id="floatingSelectGrid">
-                  <option value="">لايوجد</option>
                   {office.map(el=>{
                     return <option key={el.id} value={el.id}>{el.name}</option>
                   })}
