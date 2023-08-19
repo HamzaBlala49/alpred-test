@@ -113,7 +113,7 @@ function City_Edit() {
           />
 
         <div className="mb-3">
-            <label className="form-label fs-6">المحافظة :</label>
+            <label className="form-label fs-6">المديرية :</label>
             <select onChange={(e)=> setdirectorateId(+e.target.value)}  value={directorateId} className="form-select form-select-sm"
                 style={{fontSize:'14px',width:'300px' }} 
                 id="floatingSelectGrid">

@@ -131,7 +131,7 @@ function City() {
             <tr>
               <th scope="col">الرقم</th>
               <th scope="col">الأسم</th>
-              <th scope="col">المحافظة</th>
+              <th scope="col">المديرية</th>
               <th scope="col">تاريخ الانشاء</th>
               <th scope="col" className='text-success'>تعديل</th>
               <th scope="col" className='text-danger'>حذف</th>

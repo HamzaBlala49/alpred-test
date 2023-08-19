@@ -50,6 +50,10 @@ function Trip_Add() {
     setVehicleId(vehicles[0]?.id)
   },[vehicles]);
 
+  useEffect(()=>{
+    setOfficeId(office[0]?.id)
+  },[office]);
+
   let handelSubmit = (values,action)=>{
   if(isauth()){
     setIsSave(true)

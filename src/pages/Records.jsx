@@ -207,13 +207,29 @@ function Records() {
   let handelCheckAll = (e)=>{
     setIsCheckAll(!isCheckAll);
       if(e.target.checked){
-        let _data = data;
-        _data.forEach(el => {
-            el.isCheck = true;
-        })
-        setData([..._data]);
+        if(city_name !=""){
+            let _data = data;
+            let newData = []
+          _data.forEach(el => {
+              if(el.name_city == city_name){
+                el.isCheck = true;
+                newData.push(el)
+              }
+          })
 
-        setTransformationList(data);
+          setData([..._data]);
+          setTransformationList(newData);
+
+          
+        }else{
+          let _data = data;
+          _data.forEach(el => {
+              el.isCheck = true;
+          })
+          setData([..._data]);
+          setTransformationList(data);
+        }
+        
       }else{
         let _data = data;
         _data.forEach(el => {
@@ -265,6 +281,17 @@ function Records() {
           alert("حدث خطأ أثناء عملية الأضافة")
         })
   }
+  }
+
+  let handelCityName = (e)=>{
+    setCity_name(e.target.value);
+    setIsCheckAll(false);
+    let _data = data;
+    _data.forEach(el => {
+        el.isCheck = false;
+    })
+    setData([..._data]);
+    setTransformationList([]);
   }
 
 
@@ -330,7 +357,7 @@ function Records() {
         </div>
 
         <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-            <select onChange={(e)=> setCity_name(e.target.value)} value={city_name} className="form-select form-select-sm"
+            <select onChange={(e)=> handelCityName(e)} value={city_name} className="form-select form-select-sm"
             style={{fontSize:'14px'}} 
             id="floatingSelectGrid">
                 <option value="">أختر مدينة</option>
