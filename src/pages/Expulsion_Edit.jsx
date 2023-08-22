@@ -10,6 +10,7 @@ import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
 import CustomSelect from '../components/CustomSelect';
+import BtnLoader from '../components/BtnLoader';
 
 function Expulsion_Edit() {
   const [isSave, setIsSave] = useState(false);
@@ -91,7 +92,7 @@ let handelSubmit = (values,action)=>{
     setIsSave(true);
     let {content,price,recipient_phone_1,recipient_phone_2,recipient_name} = values;
 
-    axios.put(`${bisUrl}/office/expulsions/${Id}/`,{content,price,recipient_phone_1:`+967${recipient_phone_1}`,recipient_phone_2:`+967${recipient_phone_2}`,recipient_name,type_price,type_currency,precious,customer:customerId,to_office:officeId,to_city:cityId},config).then(()=>{
+    axios.put(`${bisUrl}/office/expulsions/${Id}/`,{content,price:+price,recipient_phone_1:recipient_phone_1,recipient_phone_2:recipient_phone_2,recipient_name,type_price,type_currency,precious,customer:customerId,to_office:officeId,to_city:cityId},config).then(()=>{
       action.resetForm();
       setIsSave(false);
       // navigate("/customer")
@@ -132,11 +133,11 @@ let handelSubmit = (values,action)=>{
     <h6 className='text-dark'><FontAwesomeIcon icon={faBox} /> تعديل طرد </h6>
   <Formik 
       initialValues={{
-        content:content,
-        recipient_phone_1:+recipient_phone_1?.length == 13 ? +recipient_phone_1?.slice(4,13): +recipient_phone_1?.slice(3,12),
-        recipient_phone_2: recipient_phone_2?.length == 13 ? +recipient_phone_2?.slice(4,13): +recipient_phone_2?.slice(3,12),
-        recipient_name:recipient_name,
-        price:price
+        content:content || "",
+        recipient_phone_1: recipient_phone_1 || "",
+        recipient_phone_2: recipient_phone_2 || "",
+        recipient_name:recipient_name || "",
+        price:Number.parseInt(price) || 0
       }}
       enableReinitialize={true}
       validationSchema={expulsionSchema}
@@ -181,7 +182,7 @@ let handelSubmit = (values,action)=>{
               <CustomInput
                 label={"السعر:"}
                 name="price"
-                type="number"
+                type="text"
 
               />
           </div>
@@ -254,7 +255,11 @@ let handelSubmit = (values,action)=>{
           </div>
           <Link role='button' onClick={()=>history.back()} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">
+              {
+                isSave ? <BtnLoader/> : "حفظ"
+              } 
+          </button>
         </Form>
        
       )}

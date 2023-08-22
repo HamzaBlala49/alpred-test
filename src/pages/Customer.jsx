@@ -16,7 +16,7 @@ function Customer() {
   let [isLoad, setIsLoad] = useState(false);
   let [element,setElement] = useState(null);
   let [searchValue,setSearchValue] = useState("")
-  let [selectValue,setSelectValue] = useState("old");
+  let [selectValue,setSelectValue] = useState("");
   let [note,setNote] = useState("");
 
   const authHeader = useAuthHeader()
@@ -32,7 +32,7 @@ function Customer() {
 
     if(isauth()){
       axios.get(`${bisUrl}/office/customers/`,config).then(res=>{
-        setData(res.data);
+        setData(res.data.reverse());
         setIsLoad(false)
 
       }).catch(e=>{
@@ -44,13 +44,6 @@ function Customer() {
 
   },[])
   
-  useEffect(()=>{
-    if(selectValue == "new"){
-      setData([...data.reverse()]);
-    }else{
-      setData([...data.reverse()]);
-    }
-  },[selectValue])
 
   let handelElement = (el)=>{
     setElement(el)
@@ -110,15 +103,16 @@ function Customer() {
         type="text" 
         className="form-control  form-control-sm outline-none"
         style={{fontSize:'14px'}}
-        placeholder='بحث.. '/>
+        placeholder={"البحث بالأسم أو رقم الهاتف"}/>
       </div>
 
       <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
         <select onChange={(e)=> handelChangeSelect(e)} value={selectValue} className="form-select form-select-sm"
         style={{fontSize:'14px'}} 
         id="floatingSelectGrid">
-            <option value="old">قديم</option>
-            <option value="new">جديد</option>
+            <option value="">كل أنواع الهوية</option>
+            <option value="بطاقة شخصية">بطاقة شخصية</option>
+            <option value="جاوز سفر">جواز سفر</option>
         </select>
       </div>
 
@@ -146,8 +140,8 @@ function Customer() {
         <tbody>
           { data.map((el,index)=>{
 
-            return el.name.startsWith(searchValue) ? <tr key={index}>
-            <th scope="row">{selectValue =="old" ? index+1 : data.length - index}</th>
+            return (el.name.startsWith(searchValue) || el.phone_1.startsWith(searchValue)) && el.name_type_doc.startsWith(selectValue)   ? <tr key={index}>
+            <th scope="row">{data.length - index}</th>
             <td>{el.name}</td>
             <td>{el.phone_1}</td>
             <td>{el.name_type_doc}</td>

@@ -8,6 +8,8 @@ import CustomInput from '../components/CustomInput';
 import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
+import { user_avatar } from '../assets/image';
+import BtnLoader from '../components/BtnLoader';
 
 
 
@@ -25,6 +27,8 @@ function Customer_Edit() {
   const [newImage ,setNewImage] = useState("");
   const [type_doc,setType_doc] = useState(1);
   const [city,setCity] = useState([]);
+  const [photoVal,setPhotoVal] = useState(false);
+
 
 
   const authHeader = useAuthHeader()
@@ -69,8 +73,8 @@ let handelSubmit = (values,action)=>{
     let {name , phone_1 ,phone_2 ,number_doc} = values;
     let formData =  new FormData();
     formData.append("name",name)
-    formData.append("phone_1",`+967${phone_1}`)
-    formData.append("phone_2",`+967${phone_2}`)
+    formData.append("phone_1",phone_1)
+    formData.append("phone_2",phone_2)
     formData.append("number_doc",+number_doc)
     formData.append("place",place)
     formData.append("type_doc",type_doc)
@@ -121,13 +125,13 @@ let handelSubmit = (values,action)=>{
 
   <Formik 
       initialValues={{
-        name:name,
-        phone_2:phone_2?.length == 13 ? +phone_2?.slice(4,13): +phone_2?.slice(3,12) ,
-        phone_1:phone_1?.length == 13 ? +phone_1?.slice(4,13): +phone_1?.slice(3,12),
-        number_doc:number_doc,
+        name:name || "",
+        phone_2:phone_2 || "",
+        phone_1:phone_1 || "",
+        number_doc:number_doc || 0,
       }}
       enableReinitialize="true"
-      // validationSchema={customerSchema}
+      validationSchema={customerSchema}
       onSubmit={(values, action)=>handelSubmit(values,action)}
     >
       {({isSubmitting}) => (
@@ -194,6 +198,8 @@ let handelSubmit = (values,action)=>{
             <input  accept='image/*' onChange={(e)=> setNewImage(e.target.files[0])} type="file" className="form-control mt-s form-control-sm outline-none"
             style={{fontSize:'14px',width:'300px'}}
             />
+
+            { photoVal && <p className='text-danger' style={{fontSize:"14px"}}>هذا الحقل مطلوب</p>}
           </div>
 
           <div className='col-12 col-lg-6 mb-3 col-md-6 col-sm-12'>
@@ -202,7 +208,7 @@ let handelSubmit = (values,action)=>{
 
             newImage ? <img src={URL.createObjectURL(newImage)} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} alt="" /> 
             :
-            doc_url ?  <img src={doc_url} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} alt="" /> :  <img src={""} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} alt="" />
+            doc_url ?  <img src={doc_url} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} alt="" /> :  <img src={user_avatar} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} alt="" />
 
           }
           </div>
@@ -210,7 +216,11 @@ let handelSubmit = (values,action)=>{
           </div>
           <Link role='button' to={"/customer"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">
+              {
+                isSave ? <BtnLoader/> : "حفظ"
+              } 
+          </button>
         </Form>
        
       )}

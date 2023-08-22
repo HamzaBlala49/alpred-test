@@ -10,6 +10,7 @@ import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
 import CustomSelect from '../components/CustomSelect';
+import BtnLoader from '../components/BtnLoader';
 
 function Expulsion_Add2() {
     const [isSave, setIsSave] = useState(false);
@@ -69,7 +70,7 @@ function Expulsion_Add2() {
       setIsSave(true);
       let {content,price,recipient_phone_1,recipient_phone_2,recipient_name} = values;
   
-      axios.post(`${bisUrl}/office/expulsions/`,{content,price,recipient_phone_1:`+967${recipient_phone_1}`,recipient_phone_2:`+967${recipient_phone_2}`,recipient_name,type_price,type_currency,precious,customer:customerId,to_office:officeId,to_city:cityId},config).then(()=>{
+      axios.post(`${bisUrl}/office/expulsions/`,{content,price:+price,recipient_phone_1:recipient_phone_1,recipient_phone_2:recipient_phone_2,recipient_name,type_price,type_currency,precious,customer:customerId,to_office:officeId,to_city:cityId},config).then(()=>{
           action.resetForm();
           setIsSave(false);
           navigate("/customer")
@@ -108,8 +109,8 @@ function Expulsion_Add2() {
         content:"",
         recipient_phone_1:"",
         recipient_name:"",
-        recipient_phone_2:" ",
-        price:""
+        recipient_phone_2:"",
+        price:0
       }}
       validationSchema={expulsionSchema}
       onSubmit={(values, action)=>handelSubmit(values,action)}
@@ -145,7 +146,7 @@ function Expulsion_Add2() {
               <CustomInput
                 label={" رقم الهاتف 2:"}
                 name="recipient_phone_2"
-                type="number"
+                type="text"
 
               />
             </div>
@@ -153,7 +154,7 @@ function Expulsion_Add2() {
               <CustomInput
                 label={"السعر:"}
                 name="price"
-                type="number"
+                type="text"
 
               />
           </div>
@@ -215,7 +216,11 @@ function Expulsion_Add2() {
           </div>
           <Link role='button' to={"/customer"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">
+              {
+                isSave ? <BtnLoader/> : "حفظ"
+              } 
+          </button>
         </Form>
        
       )}

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faUsers} from '@fortawesome/free-solid-svg-icons';
+import {faL, faUsers} from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik ,Form} from 'formik';
 import { customerSchema} from '../schemas';
@@ -8,6 +8,8 @@ import CustomInput from '../components/CustomInput';
 import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
+import { user_avatar } from '../assets/image';
+import BtnLoader from '../components/BtnLoader';
 
 
 function Customer_Add() {
@@ -17,6 +19,7 @@ function Customer_Add() {
   const [place,setPlace] = useState("");
   const [doc_url,setDoc_url] = useState("");
   const [type_doc,setType_doc] = useState(1);
+  const [photoVal,setPhotoVal] = useState(false);
 
 
   const authHeader = useAuthHeader()
@@ -48,18 +51,21 @@ let handelSubmit = (values,action)=>{
     let {name , phone_1 ,phone_2 ,number_doc} = values;
     let formData =  new FormData();
     formData.append("name",name)
-    formData.append("phone_1",`+967${phone_1}`)
-    formData.append("phone_2",`+967${phone_2}`)
+    formData.append("phone_1",phone_1)
+    formData.append("phone_2",phone_2)
     formData.append("number_doc",+number_doc)
     formData.append("place",place)
     formData.append("doc_url",doc_url)
     formData.append("type_doc",type_doc)
-    setIsSave(true);
-    axios.post(`${bisUrl}/office/customers/`,formData,config).then(()=>{
+    
+    if(doc_url !=""){
+      setPhotoVal(false);
+      setIsSave(true);
+      axios.post(`${bisUrl}/office/customers/`,formData,config).then(()=>{
         action.resetForm();
         setIsSave(false)
         navigate("/customer")
-    }).catch((e)=>{
+      }).catch((e)=>{
         setIsSave(false)
         console.log(e)
         if(e.response.status == 400){
@@ -78,7 +84,11 @@ let handelSubmit = (values,action)=>{
 
           alert("حدث خطأ أثناء عملية الأضافة")
         }
-    })
+      })
+    }else{
+      setPhotoVal(true);
+    }
+  
 
   }
 
@@ -93,12 +103,12 @@ let handelSubmit = (values,action)=>{
   <Formik 
       initialValues={{
         name:"",
-        phone_2:"",
         phone_1:"",
+        phone_2:"",
         number_doc:"",
       }}
       onSubmit = {(values, action)=> handelSubmit(values,action)}
-      // validationSchema={customerSchema}
+      validationSchema={customerSchema}
     >
       {({isSubmitting}) => (
         <Form>
@@ -159,13 +169,14 @@ let handelSubmit = (values,action)=>{
             <input  accept='image/*' onChange={(e)=> setDoc_url(e.target.files[0])} type="file" className="form-control mt-s form-control-sm outline-none"
             style={{fontSize:'14px',width:'300px'}}
             />
+            { photoVal && <p className='text-danger' style={{fontSize:"14px"}}>هذا الحقل مطلوب</p>}
           </div>
 
           <div className='col-12 col-lg-6 mb-3 col-md-6 col-sm-12'>
           <label className="form-label fs-6"> </label>
           {
             doc_url ? <img src={URL.createObjectURL(doc_url)} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} alt="" />
-            :  <img src="" className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} alt="" />
+            :  <img src={user_avatar} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"contain"}} alt="" />
 
           }
           </div>
@@ -173,7 +184,11 @@ let handelSubmit = (values,action)=>{
           </div>
           <Link role='button' to={"/customer"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">
+              {
+                isSave ? <BtnLoader/> : "حفظ"
+              } 
+          </button>
         </Form>
        
       )}

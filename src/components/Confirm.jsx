@@ -14,7 +14,7 @@ function Confirm({massage,header,handelDelete,color,icon,textBtn,element}) {
               <button type="button" className="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
-               {`${massage} ${element?.name|| ""}`}
+               {`${massage} ${element?.name || element?.id}`}
             </div>
             <div className="modal-footer border-0 justify-content-start">
                   <button type="button" className="btn btn-secondary btn-sm" data-bs-dismiss="modal">الغاء</button>

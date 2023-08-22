@@ -9,11 +9,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Alert from '../components/Alert';
 import Confirm from '../components/Confirm';
 import { check_permissions } from '../context/permissions';
+import { user_avatar } from '../assets/image';
 
 function CustomerDetiles() {
     let navigate = useNavigate()
     let {Id} = useParams()
-  let [element,setElement] = useState(null);
+    let [element,setElement] = useState(null);
     let [searchValue,setSearchValue] = useState("")
     let [selectValue,setSelectValue] = useState("old");
     let [isLoad, setIsLoad] = useState(false);
@@ -22,6 +23,12 @@ function CustomerDetiles() {
     const authHeader = useAuthHeader();
     let isauth = useIsAuthenticated();
     let [note,setNote] = useState("");
+
+    let [offices,setOffices] = useState([]);
+    let [office_name,setOffice_name] = useState("");
+
+    let [city,setCity] = useState([]);
+    let [city_name,setCity_name] = useState("");
 
     const config = {
         headers: { 'Authorization': authHeader() }
@@ -40,8 +47,22 @@ function CustomerDetiles() {
         })
 
         axios.get(`${bisUrl}/office/expulsions/?customer=${Id}`,config).then(res=>{
-            setExpulsions([...res.data]);
+            setExpulsions(res.data.reverse());
             setIsLoad(false)
+        }).catch(e=>{
+            console.log(e)
+            alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
+        })
+
+        axios.get(`${bisUrl}/office/office/`,config).then(res=>{
+            setOffices(res.data.reverse());
+        }).catch(e=>{
+            console.log(e)
+            alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
+        })
+
+        axios.get(`${bisUrl}/places/city/`,config).then(res=>{
+            setCity(res.data.reverse());
         }).catch(e=>{
             console.log(e)
             alert("حصل مشكلة في تحميل البيانات تأكد من الاتصال بالشبكة")
@@ -118,7 +139,7 @@ let handelDelete = (el)=>{
                </div>
                <div className='col-12'>
 
-                   {data.doc_url ? <img src={data.doc_url} className='shadow-sm'style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} /> : <img src={""} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} /> }
+                   {data.doc_url ? <img src={data.doc_url} className='shadow-sm'style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"cover"}} /> : <img src={user_avatar} className='shadow-sm' style={{width:"300px",height:"250px",borderRadius:"4px",display:"block",objectFit:"contain"}} /> }
 
                </div>
                </div>
@@ -138,15 +159,28 @@ let handelDelete = (el)=>{
                     type="text" 
                     className="form-control  form-control-sm outline-none"
                     style={{fontSize:'14px'}}
-                    placeholder='البحث بأسم المستلم.. '/>
+                    placeholder='البحث بأسم المستلم أو الرقم.. '/>
                 </div>
 
-                <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-                    <select onChange={(e)=> handelChangeSelect(e)} value={selectValue} className="form-select form-select-sm"
+                <div className='col-12 col-lg-3 col-md-2 col-sm-12'>
+                    <select onChange={(e)=> setOffice_name(e.target.value)} value={office_name} className="form-select form-select-sm"
                     style={{fontSize:'14px'}} 
                     id="floatingSelectGrid">
-                        <option value="old">قديم</option>
-                        <option value="new">جديد</option>
+                        <option value="">كل المكاتب</option>
+                        {
+                            offices.map((el)=><option value={el.name}>{el.name}</option>)
+                        }
+                    </select>
+                </div>
+
+                <div className='col-12 col-lg-3 col-md-2 col-sm-12'>
+                    <select onChange={(e)=> setCity_name(e.target.value)} value={city_name} className="form-select form-select-sm"
+                    style={{fontSize:'14px'}} 
+                    id="floatingSelectGrid">
+                        <option value="">كل المدن</option>
+                        {
+                            city.map((el)=><option value={el.name}>{el.name}</option>)
+                        }
                     </select>
                 </div>
             </div>
@@ -181,8 +215,8 @@ let handelDelete = (el)=>{
                 <tbody>
                 { expulsions.map((el,index)=>{
 
-                    return el.recipient_name?.startsWith(searchValue) ? <tr key={index}>
-                    <th scope="row">{selectValue =="old" ? index+1 : data.length - index}</th>
+                    return (el.recipient_name?.startsWith(searchValue) || el.recipient_phone_1.startsWith(searchValue)) && el.name_to_office.startsWith(office_name) && el.name_to_city.startsWith(city_name) ? <tr key={index}>
+                    <th scope="row">{expulsions.length - index}</th>
                     <td>{el.id}</td>
                     <td>{el.recipient_name}</td>
                     <td>{el.recipient_phone_1}</td>
