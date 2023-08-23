@@ -473,6 +473,7 @@ function Records() {
               <th scope="col">الرحلة</th>
               <th scope="col">وجهة الطرد</th>
               <th scope="col">السعر</th>
+              <th scope="col">نوع العملة</th>
               <th scope="col"> نوع الدفع</th>
 
               <th scope="col">تاريخ الانشاء</th>
@@ -492,6 +493,7 @@ function Records() {
             <td>{el.trip || "لايوجد"}</td>
             <td>{el.name_city || "لايوجد"}</td>
             <td>{el.name_price || "لايوجد"}</td>
+            <td>{el.name_type_currency || "لايوجد"}</td>
             <td>{el.name_type_price || "لايوجد"}</td>
             <td>{el.create_at.slice(0,10)}</td>
             {

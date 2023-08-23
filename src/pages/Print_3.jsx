@@ -243,6 +243,7 @@ function Print_3() {
                                         {
                                             reportState &&<>
                                                 <th scope="col">السعر</th>
+                                                <th scope="col">نوع العملة</th>
                                                 <th scope="col">نوع الدفع</th>
                                             </>
                                         }
@@ -264,6 +265,7 @@ function Print_3() {
                                         {
                                             reportState && <>
                                                 <td>{el.name_price}</td>
+                                                <td>{el.name_type_currency}</td>
                                                 <td>{el.name_type_price}</td>
                                             </>
                                         }
