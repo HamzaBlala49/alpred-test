@@ -8,6 +8,7 @@ import CustomInput from '../components/CustomInput';
 import { bisUrl } from '../context/biseUrl';
 import { useAuthHeader, useIsAuthenticated } from 'react-auth-kit';
 import axios from 'axios';
+import BtnLoader from '../components/BtnLoader';
 
 function Directorate_Add() {
     const navigate = useNavigate();
@@ -115,7 +116,11 @@ function Directorate_Add() {
 
           <Link role='button' to={"/location_home/directorate"} className="btn  ms-2 btn-sm">رجوع</Link>
           |
-          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">حفظ</button>
+          <button type="submit" disabled={isSave} className="btn btn-dark btn-sm me-2">
+              {
+                isSave ? <BtnLoader/> : "حفظ"
+              } 
+          </button>
         </Form>
       )}
     </Formik>

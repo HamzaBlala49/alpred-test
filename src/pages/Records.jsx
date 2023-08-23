@@ -472,6 +472,9 @@ function Records() {
               <th scope="col">المخزن</th>
               <th scope="col">الرحلة</th>
               <th scope="col">وجهة الطرد</th>
+              <th scope="col">السعر</th>
+              <th scope="col"> نوع الدفع</th>
+
               <th scope="col">تاريخ الانشاء</th>
               <th scope="col" className='text-success'>تعديل</th>
               <th scope="col" className='text-danger'>حذف</th>
@@ -488,6 +491,8 @@ function Records() {
             <td>{el.name_store || "لايوجد"}</td>
             <td>{el.trip || "لايوجد"}</td>
             <td>{el.name_city || "لايوجد"}</td>
+            <td>{el.name_price || "لايوجد"}</td>
+            <td>{el.name_type_price || "لايوجد"}</td>
             <td>{el.create_at.slice(0,10)}</td>
             {
                 check_permissions("office.change_motionrecording")?  <td> <Link  to={`${el.id}`} role='button'><FontAwesomeIcon className='text-success' icon={faPenToSquare} /></Link></td>: <td> <Link  style={{cursor:"not-allowed"}} role='button'><FontAwesomeIcon className='text-secondary' icon={faPenToSquare} /></Link></td>

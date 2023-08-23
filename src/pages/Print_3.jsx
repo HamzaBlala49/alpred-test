@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { logo } from "../assets/image";
 import { useReactToPrint } from 'react-to-print';
+import BtnLoader from "../components/BtnLoader";
 
 function Print_3() {
     const [beforeData,setBeforeData] = useState([]);
@@ -17,6 +18,12 @@ function Print_3() {
     const componentRef = useRef();
     let [transformationList,setTransformationList] = useState([]);
     let [isTransformation,setIsTransformation] = useState(false)
+    let [reportState,setReportState] = useState(true);
+    let [isPrint,setIsPrint] = useState(false);
+    let [isCheckAll, setIsCheckAll] = useState(false);
+    let [isSend, setIsSend] = useState(false);
+    
+    
 
 
     const authHeader = useAuthHeader()
@@ -68,10 +75,29 @@ function Print_3() {
               direction: rtl;
             }
           }`,
-        //   onAfterPrint: ()=> navigate("/expulsion")
+          onAfterPrint: ()=> {
+            setIsPrint(false);
+            setReportState(true)
+        }
     })
 
-    let handelReportBtn = ()=> handlePrint()
+    let handelReportBtn = ()=>{
+        setIsPrint(true);
+
+        setTimeout(() => {
+            handlePrint() 
+        }, 10);
+
+    } 
+    let handelReportBtn2 = ()=>{
+        setReportState(false);
+        setIsPrint(true);
+
+        setTimeout(() => {
+            handlePrint() 
+        }, 10);
+
+    } 
 
 
     let handelCheck =(e,el)=>{
@@ -86,9 +112,14 @@ function Print_3() {
         }
     
         setTransformationList([...list])
+
+        if(transformationList.length == 0){
+            setIsCheckAll(false)
+        }
     }
 
     let handelCheckAll = (e) =>{
+        setIsCheckAll(!isCheckAll)
         if(e.target.checked){
             let _data = data;
             _data.forEach(el => {
@@ -110,14 +141,21 @@ function Print_3() {
     }
 
     let handelTransformation = ()=>{
-        console.log("sdk")
         if(isauth()){
-            axios.post(`${bisUrl}/office/trips/records?trip=${Id}`,{"records":transformationList,"expulsion_status":4},config).then((res)=>{
-                setIsTransformation(!isTransformation)
-              }).catch((e)=>{
-                console.log(e)
-                alert("حدث خطأ أثناء عملية الأضافة")
-              })
+            if(transformationList.length > 0){
+                setIsSend(true);
+                axios.post(`${bisUrl}/office/trips/records?trip=${Id}`,{"records":transformationList,"expulsion_status":4},config).then((res)=>{
+                    setIsTransformation(!isTransformation)
+                    setIsCheckAll(false);
+                    setIsSend(false);
+    
+                  }).catch((e)=>{
+                    setIsSend(false);
+                    console.log(e)
+                    alert("حدث خطأ أثناء عملية الأضافة")
+                  })
+            }
+           
         }
     }
 
@@ -134,7 +172,13 @@ function Print_3() {
                             type='button'
                             style={{fontSize:'14px'}}
                             onClick={()=> handelTransformation()}
-                            >  ترحيل تسليم مركبة <FontAwesomeIcon icon={faHandHoldingHand} /> </button>
+                            >  
+                            {
+                                isSend ? <BtnLoader/>:<>
+                                     ترحيل الئ تسليم مركبة <FontAwesomeIcon icon={faHandHoldingHand} />
+                                </>
+                            }
+                        </button>
                         </div>
 
                         <div className="col-5">
@@ -145,7 +189,13 @@ function Print_3() {
                             > طباعة السند <FontAwesomeIcon icon={faPrint} /> </button>
                         </div>
 
-
+                        <div className="col-5">
+                            <button className='btn btn-sm my-3 w-100 btn-warning' 
+                            type='button'
+                            style={{fontSize:'14px'}}
+                            onClick={()=> handelReportBtn2()}
+                            > طباعة للنقاط  <FontAwesomeIcon icon={faPrint} /> </button>
+                        </div>
 
                     </div>
                     
@@ -183,13 +233,19 @@ function Print_3() {
                                 <table className="table table-striped">
                                     <thead>
                                         <tr>
-                                        <th scope="col">الكل<input class="form-check-input" onChange={(e)=> handelCheckAll(e)} type="checkbox" value="" id=""/></th>
+                                        {!isPrint && <th scope="col">الكل<input class="form-check-input" onChange={(e)=> handelCheckAll(e)} type="checkbox" checked={isCheckAll} value="" id=""/></th>}
                                         <th scope="col">الرقم</th>
                                         <th scope="col">رقم الطرد</th>
                                         <th scope="col">المرسل</th>
                                         <th scope="col">رقم المرسل</th>
                                         <th scope="col">المستلم</th>
                                         <th scope="col">رقم المستلم</th>
+                                        {
+                                            reportState &&<>
+                                                <th scope="col">السعر</th>
+                                                <th scope="col">نوع الدفع</th>
+                                            </>
+                                        }
                                         <th scope="col">المحتويات</th>
 
                                         </tr>
@@ -198,16 +254,22 @@ function Print_3() {
                                     { data.map((el,index)=>{
 
                                         return  <tr key={index}>
-                                        <th scope="row"><input class="form-check-input" checked={el.isChecked} onChange={(e)=> handelCheck(e,el)}  type="checkbox" aria-label="Text for screen reader"/></th>
+                                        {!isPrint && <th scope="row"><input class="form-check-input" checked={el.isChecked} onChange={(e)=> handelCheck(e,el)}  type="checkbox" aria-label="Text for screen reader"/></th>}
                                         <th scope="row">{index+1}</th>
                                         <td>{el.expulsion}</td>
                                         <td>{el.name_customer}</td>
                                         <td>{el.name_customer_phone_1}</td>
                                         <td>{el.name_recipient_name}</td>
                                         <td>{el.name_recipient_phone_1}</td>
+                                        {
+                                            reportState && <>
+                                                <td>{el.name_price}</td>
+                                                <td>{el.name_type_price}</td>
+                                            </>
+                                        }
                                         <td>{el.name_content}</td>
                                     </tr>
-                                l
+                                
 
                                     })}
 

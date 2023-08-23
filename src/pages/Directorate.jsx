@@ -15,7 +15,8 @@ function Directorate() {
     let [isLoad, setIsLoad] = useState(false);
     let [element,setElement] = useState(null);
     let [searchValue,setSearchValue] = useState("")
-    let [selectValue,setSelectValue] = useState("old");
+    let [provinec,setProvinec] = useState([]);
+    let [provinec_name,setProvinec_name] = useState("");
 
     const authHeader = useAuthHeader()
     const config = {
@@ -30,7 +31,17 @@ function Directorate() {
     setIsLoad(true)
     if(isauth()){
       axios.get(`${bisUrl}/places/directorate/`,config).then(res=>{
-        setData(res.data);
+        setData(res.data.reverse());
+        setIsLoad(false)
+
+      }).catch(e=>{
+        console.error(e)
+
+      alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
+      })
+
+      axios.get(`${bisUrl}/places/provinec/`,config).then(res=>{
+        setProvinec(res.data.reverse());
         setIsLoad(false)
 
       }).catch(e=>{
@@ -43,13 +54,6 @@ function Directorate() {
 
   },[])
   
-  useEffect(()=>{
-    if(selectValue == "new"){
-      setData([...data.reverse()]);
-    }else{
-      setData([...data.reverse()]);
-    }
-  },[selectValue])
 
   let handelElement = (el)=>{
     setElement(el)
@@ -78,9 +82,7 @@ function Directorate() {
       setSearchValue(e.target.value);
   }
 
-  let handelChangeSelect = (e)=>{
-    setSelectValue(e.target.value)
-  }
+
 
 
   return (
@@ -113,11 +115,13 @@ function Directorate() {
       </div>
 
       <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-        <select onChange={(e)=> handelChangeSelect(e)} value={selectValue} className="form-select form-select-sm"
+        <select onChange={(e)=> setProvinec_name(e.target.value)} value={provinec_name} className="form-select form-select-sm"
         style={{fontSize:'14px'}} 
         id="floatingSelectGrid">
-            <option value="old">قديم</option>
-            <option value="new">جديد</option>
+            <option value="">كل المحافظات</option>
+            {
+              provinec.map((el)=><option value={el.name}>{el.name}</option>)
+            }
         </select>
     </div>
 
@@ -144,7 +148,7 @@ function Directorate() {
           { data.map((el,index)=>{
 
             return el.name.startsWith(searchValue) ? <tr key={index}>
-            <th scope="row">{selectValue =="old" ? index+1 : data.length - index}</th>
+            <th scope="row">{data.length - index}</th>
             <td>{el.name}</td>
             <td>{el.name_provinec}</td>
             <td>{el.create_at.slice(0,10)}</td>

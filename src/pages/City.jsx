@@ -13,9 +13,9 @@ function City() {
     const [data, setData] = useState([]);
     let [isLoad, setIsLoad] = useState(false);
     let [element,setElement] = useState(null);
-    let [searchValue,setSearchValue] = useState("")
-    let [selectValue,setSelectValue] = useState("old");
-
+    let [searchValue,setSearchValue] = useState("");
+    let [directorate,setDirectorate] = useState([]);
+    let [directorate_name,setDirectorate_name] = useState("");
     const authHeader = useAuthHeader()
     const config = {
         headers: { 'Authorization': authHeader() }
@@ -29,8 +29,17 @@ function City() {
     setIsLoad(true)
     if(isauth()){
       axios.get(`${bisUrl}/places/city/`,config).then(res=>{
-        setData(res.data);
+        setData(res.data.reverse());
         setIsLoad(false)
+
+      }).catch(e=>{
+        console.error(e)
+
+      alert("حث خطأ اثناء جلب البيانات تأكد من اتصالك بالشبكة")
+      })
+
+      axios.get(`${bisUrl}/places/directorate/`,config).then(res=>{
+        setDirectorate(res.data.reverse());
 
       }).catch(e=>{
         console.error(e)
@@ -42,13 +51,7 @@ function City() {
 
   },[])
   
-  useEffect(()=>{
-    if(selectValue == "new"){
-      setData([...data.reverse()]);
-    }else{
-      setData([...data.reverse()]);
-    }
-  },[selectValue])
+
 
   let handelElement = (el)=>{
     setElement(el)
@@ -69,6 +72,17 @@ function City() {
         alert("هناك خطأ حدث أثناء الخذف!!")
       })
 
+      axios.delete(`${bisUrl}/places/city/${el.id}`,config).then(()=>{
+        let _data= data;
+        const index = _data.indexOf(el);
+        _data.splice(index,1);
+        setData([..._data]);
+
+      }).catch(e=>{
+        console.error(e)
+        alert("هناك خطأ حدث أثناء الخذف!!")
+      })
+
     }
 
   }
@@ -77,10 +91,7 @@ function City() {
       setSearchValue(e.target.value);
   }
 
-  let handelChangeSelect = (e)=>{
-    setSelectValue(e.target.value)
-  }
-
+ 
   return (
     <div className='p-2'>
 
@@ -111,11 +122,13 @@ function City() {
       </div>
 
       <div className='col-12 col-lg-2 col-md-2 col-sm-12'>
-        <select onChange={(e)=> handelChangeSelect(e)} value={selectValue} className="form-select form-select-sm"
+        <select onChange={(e)=> setDirectorate_name(e.target.value)} value={directorate_name} className="form-select form-select-sm"
         style={{fontSize:'14px'}} 
         id="floatingSelectGrid">
-            <option value="old">قديم</option>
-            <option value="new">جديد</option>
+            <option value="">كل المديريات</option>
+            {
+              directorate.map((el)=><option value={el.name}>{el.name}</option>)
+            }
         </select>
     </div>
 
@@ -142,7 +155,7 @@ function City() {
           { data.map((el,index)=>{
 
             return el.name.startsWith(searchValue) ? <tr key={index}>
-            <th scope="row">{selectValue =="old" ? index+1 : data.length - index}</th>
+            <th scope="row">{data.length - index}</th>
             <td>{el.name}</td>
             <td>{el.name_directorate}</td>
             <td>{el.create_at.slice(0,10)}</td>
