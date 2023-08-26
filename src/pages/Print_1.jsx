@@ -150,11 +150,11 @@ function Print_1() {
         } 
 
         {
-          typePrint == 1 && <div className='row g-1 mt-5' style={{height:"300px"}} >
+          typePrint == 1 && <div className='row g-1' style={{height:"300px"}} >
             <div className='position-relative'>
-              {/* {
-                isPrint && <img src={print} className='image-fluid w-100' />
-              } */}
+              {
+                isPrint && <img src={print}  className='image-fluid w-100' />
+              }
               {/* section one */}
               <p  style={{position:"absolute",top:"97px" , right:"65px",fontSize:"14px",fontWeight:"bold"}}>{element.name_from_office}</p>
               <p  style={{position:"absolute",top:"97px" , right:"225px",fontSize:"14px",fontWeight:"bold"}}>{element.name_to_office}</p>
