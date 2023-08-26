@@ -85,7 +85,7 @@ function Print_1() {
         </div>
 
         </div>
-        <div className='print '   ref={componentRef}>
+        <div className='print p-0'   ref={componentRef}>
         {
           typePrint == 2 && <div className='row g-1 p-1' >
           <div className='col-8'>
@@ -156,20 +156,20 @@ function Print_1() {
                 isPrint && <img src={print}  className='image-fluid w-100' />
               }
               {/* section one */}
-              <p  style={{position:"absolute",top:"97px" , right:"78px",fontSize:"14px",fontWeight:"bold"}}>{element.name_from_office}</p>
-              <p  style={{position:"absolute",top:"97px" , right:"240px",fontSize:"14px",fontWeight:"bold"}}>{element.name_to_office}</p>
-              <p  style={{position:"absolute",top:"94px" , right:"414px",fontSize:"14px",fontWeight:"bold"}}>{date.getDate()}</p>
-              <p  style={{position:"absolute",top:"94px" , right:"455px",fontSize:"14px",fontWeight:"bold"}}>{date.getMonth() + 1}</p>
-              <p  style={{position:"absolute",top:"92px" , right:"488px",fontSize:"16px",fontWeight:"bold"}}>{date.getFullYear().toString().slice(2,4)}</p>
+              <p  style={{position:"absolute",top:"105px" , right:"84px",fontSize:"14px",fontWeight:"bold"}}>{element.name_from_office}</p>
+              <p  style={{position:"absolute",top:"105px" , right:"260px",fontSize:"14px",fontWeight:"bold"}}>{element.name_to_office}</p>
+              <p  style={{position:"absolute",top:"106px" , right:"460px",fontSize:"14px",fontWeight:"bold"}}>{date.getDate()}</p>
+              <p  style={{position:"absolute",top:"105px" , right:"500px",fontSize:"14px",fontWeight:"bold"}}>{date.getMonth() + 1}</p>
+              <p  style={{position:"absolute",top:"104px" , right:"540px",fontSize:"16px",fontWeight:"bold"}}>{date.getFullYear().toString().slice(2,4)}</p>
               {/* section tow */}
-              <p  style={{position:"absolute",top:"135px" , right:"160px",fontSize:"13px",fontWeight:"bold"}}>{element.name_customer}</p>
-              <p  style={{position:"absolute",top:"160px" , right:"160px",fontSize:"13px",fontWeight:"bold"}}>{element.name_to_city}</p>
-              <p  style={{position:"absolute",top:"185px" , right:"160px",fontSize:"11px",fontWeight:"bold"}}>{element.content}</p>
+              <p  style={{position:"absolute",top:"150px" , right:"180px",fontSize:"13px",fontWeight:"bold"}}>{element.name_customer}</p>
+              <p  style={{position:"absolute",top:"175px" , right:"180px",fontSize:"13px",fontWeight:"bold"}}>{element.name_to_city}</p>
+              <p  style={{position:"absolute",top:"205px" , right:"180px",fontSize:"11px",fontWeight:"bold"}}>{element.content}</p>
 
               {/* section three */}
-              <p  style={{position:"absolute",top:"135px" , right:"474px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_name}</p>
-              <p  style={{position:"absolute",top:"160px" , right:"474px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_phone_1}</p>
-              <p  style={{position:"absolute",top:"185px" , right:"474px",fontSize:"11px",fontWeight:"bold"}}>{element.id}</p>
+              <p  style={{position:"absolute",top:"149px" , right:"520px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_name}</p>
+              <p  style={{position:"absolute",top:"174px" , right:"520px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_phone_1}</p>
+              <p  style={{position:"absolute",top:"205px" , right:"520px",fontSize:"11px",fontWeight:"bold"}}>{element.id}</p>
 
 
 
