@@ -156,20 +156,20 @@ function Print_1() {
                 isPrint && <img src={print}  className='image-fluid w-100' />
               } */}
               {/* section one */}
-              <p  style={{position:"absolute",top:"65px" , right:"70px",fontSize:"14px",fontWeight:"bold"}}>{element.name_from_office}</p>
+              <p  style={{position:"absolute",top:"65px" , right:"65px",fontSize:"14px",fontWeight:"bold"}}>{element.name_from_office}</p>
               <p  style={{position:"absolute",top:"65px" , right:"230px",fontSize:"14px",fontWeight:"bold"}}>{element.name_to_office}</p>
               <p  style={{position:"absolute",top:"65px" , right:"420px",fontSize:"14px",fontWeight:"bold"}}>{date.getDate()}</p>
               <p  style={{position:"absolute",top:"65px" , right:"463px",fontSize:"14px",fontWeight:"bold"}}>{date.getMonth() + 1}</p>
-              <p  style={{position:"absolute",top:"65px" , right:"500px",fontSize:"16px",fontWeight:"bold"}}>{date.getFullYear().toString().slice(2,4)}</p>
+              <p  style={{position:"absolute",top:"63px" , right:"500px",fontSize:"16px",fontWeight:"bold"}}>{date.getFullYear().toString().slice(2,4)}</p>
               {/* section tow */}
-              <p  style={{position:"absolute",top:"95px" , right:"160px",fontSize:"13px",fontWeight:"bold"}}>{element.name_customer}</p>
-              <p  style={{position:"absolute",top:"125px" , right:"160px",fontSize:"13px",fontWeight:"bold"}}>{element.name_to_city}</p>
-              <p  style={{position:"absolute",top:"155px" , right:"160px",fontSize:"11px",fontWeight:"bold"}}>{element.content}</p>
+              <p  style={{position:"absolute",top:"100px" , right:"155px",fontSize:"13px",fontWeight:"bold"}}>{element.name_customer}</p>
+              <p  style={{position:"absolute",top:"130px" , right:"155px",fontSize:"13px",fontWeight:"bold"}}>{element.name_to_city}</p>
+              <p  style={{position:"absolute",top:"160px" , right:"155px",fontSize:"11px",fontWeight:"bold"}}>{element.content}</p>
 
               {/* section three */}
-              <p  style={{position:"absolute",top:"95px" , right:"480px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_name}</p>
-              <p  style={{position:"absolute",top:"125px" , right:"480px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_phone_1}</p>
-              <p  style={{position:"absolute",top:"155px" , right:"480px",fontSize:"11px",fontWeight:"bold"}}>{element.id}</p>
+              <p  style={{position:"absolute",top:"100px" , right:"480px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_name}</p>
+              <p  style={{position:"absolute",top:"130px" , right:"480px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_phone_1}</p>
+              <p  style={{position:"absolute",top:"160px" , right:"480px",fontSize:"11px",fontWeight:"bold"}}>{element.id}</p>
 
 
 
