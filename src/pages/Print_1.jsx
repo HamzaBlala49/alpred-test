@@ -150,7 +150,7 @@ function Print_1() {
         } 
 
         {
-          typePrint == 1 && <div className='row g-1' style={{height:"300px"}} >
+          typePrint == 1 && <div className='row' style={{height:"300px"}} >
             <div className='position-relative'>
               {
                 isPrint && <img src={print}  className='image-fluid w-100' />
