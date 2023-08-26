@@ -41,7 +41,7 @@ function Print_1() {
 
     const handlePrint = useReactToPrint({
         content:()=> componentRef.current,
-        documentTitle:`سند أستلام مكتب (${element.id})`,
+        documentTitle:``,
         pageStyle:`@media print {
             @page {
               direction: rtl;
@@ -162,14 +162,14 @@ function Print_1() {
               <p  style={{position:"absolute",top:"65px" , right:"463px",fontSize:"14px",fontWeight:"bold"}}>{date.getMonth() + 1}</p>
               <p  style={{position:"absolute",top:"63px" , right:"500px",fontSize:"16px",fontWeight:"bold"}}>{date.getFullYear().toString().slice(2,4)}</p>
               {/* section tow */}
-              <p  style={{position:"absolute",top:"100px" , right:"155px",fontSize:"13px",fontWeight:"bold"}}>{element.name_customer}</p>
+              <p  style={{position:"absolute",top:"103px" , right:"155px",fontSize:"13px",fontWeight:"bold"}}>{element.name_customer}</p>
               <p  style={{position:"absolute",top:"130px" , right:"155px",fontSize:"13px",fontWeight:"bold"}}>{element.name_to_city}</p>
               <p  style={{position:"absolute",top:"160px" , right:"155px",fontSize:"11px",fontWeight:"bold"}}>{element.content}</p>
 
               {/* section three */}
-              <p  style={{position:"absolute",top:"100px" , right:"480px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_name}</p>
-              <p  style={{position:"absolute",top:"130px" , right:"480px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_phone_1}</p>
-              <p  style={{position:"absolute",top:"160px" , right:"480px",fontSize:"11px",fontWeight:"bold"}}>{element.id}</p>
+              <p  style={{position:"absolute",top:"103px" , right:"485px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_name}</p>
+              <p  style={{position:"absolute",top:"130px" , right:"485px",fontSize:"13px",fontWeight:"bold"}}>{element.recipient_phone_1}</p>
+              <p  style={{position:"absolute",top:"160px" , right:"485px",fontSize:"11px",fontWeight:"bold"}}>{element.id}</p>
 
 
 
